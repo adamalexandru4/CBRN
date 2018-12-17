@@ -1,0 +1,83 @@
+﻿<Window x:Class="CBRN_Project.MVVM.Views.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CBRN_Project.MVVM.Views"
+        xmlns:u="clr-namespace:CBRN_Project.Utility"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner"
+        Title="DialogWindow" Height="150" Width="354">
+    <Window.Resources>
+        <u:StringToFloatConverter x:Key="StringToFloat"/>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="DockPanel.Dock" Value="Bottom"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+    </Window.Resources>
+    
+    <DockPanel>
+        <!--<TextBlock Text="{Binding Message, FallbackValue='DIALOG_MESSAGE'}" VerticalAlignment="Center" HorizontalAlignment="Center"/>-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Row="1" Grid.Column="0" 
+                     Text="{Binding Inhalation,
+                            UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource StringToFloat}
+                            }"/>
+            <TextBox Grid.Row="1" Grid.Column="1"
+                     Text="{Binding PervVap, 
+                            UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource StringToFloat}}"/>
+            <TextBox Grid.Row="1" Grid.Column="2"
+                     Text="{Binding PercLiq, 
+                            UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource StringToFloat}}"/>
+            <TextBox Grid.Row="1" Grid.Column="3"
+                     Text="{Binding BetaRad, 
+                            UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource StringToFloat}}"/>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Inhalation"/>
+            <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Vertical" VerticalAlignment="Bottom">
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Percutaneous"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Vapour"/>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="2"  Orientation="Vertical" VerticalAlignment="Bottom">
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Percutaneous"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Liquid"/>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="3"  Orientation="Vertical" VerticalAlignment="Bottom">
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Beta"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Radiation"/>
+            </StackPanel>
+
+            <Button Grid.Row="2" Grid.Column="2" IsDefault="True" Command="{Binding OkCommand}" Margin="0 0 0 5" Width="50" >Enter</Button>
+            <Button Grid.Row="2" Grid.Column="3" IsCancel="True" Command="{Binding CancelCommand}" Margin="0 0 0 5" Width="50">Cancel</Button>
+            
+        </Grid>
+    </DockPanel>
+</Window>

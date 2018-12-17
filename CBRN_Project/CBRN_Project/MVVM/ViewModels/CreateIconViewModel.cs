@@ -1,0 +1,473 @@
+﻿using CBRN_Project.Data_Access;
+using CBRN_Project.MVVM.Models;
+using CBRN_Project.Utility;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+
+namespace CBRN_Project.MVVM.ViewModels
+{
+    public class CreateIconViewModel : WorkspaceViewModel
+    {
+        #region Fields
+
+        readonly Icon icon;
+        readonly IconRepository iconRepository;
+
+        IDialogService dialogService;
+
+        RelayCommand saveCommand;
+        RelayCommand changeToTextBoxBreathingRate;
+        RelayCommand editIpeCommand;
+        RelayCommand vehicleShelterCommand;
+
+        #endregion
+
+        #region Constructor
+
+        public CreateIconViewModel(Icon newIcon, IconRepository newIconRepository, IDialogService dialogService)
+        {
+            icon = newIcon ?? throw new ArgumentNullException("icon");
+            iconRepository = newIconRepository ?? throw new ArgumentNullException("iconrepository");
+            this.dialogService = dialogService;
+
+            this.DisplayName = "Create Icon";
+
+            CreateBreathingRateValues();
+            CreateIpeClasses();
+            CreateUniformList();
+        }
+        
+        #endregion
+
+        #region Icon Properties
+
+        public float Personnel
+        {
+            get { return icon.Personnel; }
+            set
+            {
+                if (value == icon.Personnel)
+                    return;
+
+                icon.Personnel = value;
+
+                base.OnPropertyChanged("Personnel");
+            }
+        }
+
+        public float BodySurfaceArea
+        {
+            get
+            {
+                return icon.BodySurfaceArea;
+            }
+            set
+            {
+                if (value == icon.BodySurfaceArea)
+                    return;
+
+                icon.BodySurfaceArea = value;
+
+                base.OnPropertyChanged("BodySurfaceArea");
+            }
+        }
+
+        #region Breathing Rate
+
+        private ObservableCollection<string> breathingRateList;
+
+        public ObservableCollection<string> BreathingRateList
+        {
+            get { return breathingRateList; }
+            set
+            {
+                breathingRateList = value;
+
+                OnPropertyChanged("BreathingRateList");
+            }
+        }
+
+        private string breathingRateSelected;
+
+        public string BreathingRateSelected
+        {
+            get { return breathingRateSelected; }
+            set
+            {
+                breathingRateSelected = value;
+                icon.BreathingRate.BreathingRateActivityLevel = breathingRateSelected;
+
+                OnPropertyChanged("BreathingRateSelected");
+            }
+        }
+
+        private bool breathingRateTextBoxVisiblity = false;
+        
+        public bool BreathingRateTextBoxVisibility
+        {
+            get { return breathingRateTextBoxVisiblity; }
+            set
+            {
+                breathingRateTextBoxVisiblity = value;
+                OnPropertyChanged("BreathingRateTextBoxVisibility");
+            }
+        }
+
+        private bool breathingRateComboBoxVisiblity = true;
+
+        public bool BreathingRateComboBoxVisibility
+        {
+            get { return breathingRateComboBoxVisiblity; }
+            set
+            {
+                breathingRateComboBoxVisiblity = value;
+                OnPropertyChanged("BreathingRateComboBoxVisibility");
+            }
+        }
+
+        public float BreathingRateChemAg
+        {
+            get
+            {
+                return icon.BreathingRate.ChemAg_Ih;
+            }
+            set
+            {
+                if (value == icon.BreathingRate.ChemAg_Ih)
+                    return;
+
+                icon.BreathingRate.ChemAg_Ih = value;
+
+                base.OnPropertyChanged("BreathingRateChemAg");
+            }
+        }
+
+        public float BreathingRateBioAg
+        {
+            get
+            {
+                return icon.BreathingRate.BioAg_RadPar_Ih;
+            }
+            set
+            {
+                if (value == icon.BreathingRate.BioAg_RadPar_Ih)
+                    return;
+
+                icon.BreathingRate.BioAg_RadPar_Ih = value;
+                base.OnPropertyChanged("BreathingRateBioAg");
+            }
+        }
+
+        void CreateBreathingRateValues()
+        {
+            icon.BreathingRate = new BreathingRate();
+
+            var list = BreathingRate.GetActivityLevelList();
+            BreathingRateList = new ObservableCollection<string>();
+            foreach(var elem in list)
+            {
+                BreathingRateList.Add(elem);
+            }
+
+            BreathingRateSelected = icon.BreathingRate.BreathingRateActivityLevel;
+        }
+
+        #region Breathing Rate Command
+
+        public ICommand ChangeToTextBoxBreathingRate
+        {
+            get
+            {
+                if(changeToTextBoxBreathingRate == null)
+                {
+                    changeToTextBoxBreathingRate = new RelayCommand(param => this.ChangeVisiblitiesBreathingRate());
+                }
+                return changeToTextBoxBreathingRate;
+            }
+        }
+
+        public void ChangeVisiblitiesBreathingRate()
+        {
+            BreathingRateComboBoxVisibility = false;
+            BreathingRateTextBoxVisibility = true;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region IPE 
+
+        private ObservableCollection<string> ipeList;
+
+        public ObservableCollection<string> IpeList
+        {
+            get { return ipeList; }
+            set
+            {
+                ipeList = value;
+
+                OnPropertyChanged("IpeList");
+            }
+        }
+
+        private string ipeSelected;
+
+        public string IpeSelected
+        {
+            get { return ipeSelected; }
+            set
+            {
+                ipeSelected = value;
+                icon.IPE.IpeClass = ipeSelected;
+
+                OnPropertyChanged("IpeSelected");
+            }
+        }
+
+        void CreateIpeClasses()
+        {
+            icon.IPE = new ProtFactors();
+
+            IpeList = new ObservableCollection<string>();
+            var list = ProtFactors.GetProtectionFactorsList();
+            foreach(var elem in list)
+            {
+                IpeList.Add(elem);
+            }
+
+            IpeSelected = icon.IPE.IpeClass;
+        }
+
+        public ICommand EditIpeCommand
+        {
+            get
+            {
+                if (editIpeCommand == null)
+                {
+                    editIpeCommand = new RelayCommand(param => this.EditIpe());
+                }
+
+                return editIpeCommand;
+            }
+        }
+
+        void EditIpe()
+        {
+            var viewModel = new IPEDialogViewModel();
+            
+            bool? result = dialogService.ShowDialog(viewModel);
+            if(result.HasValue)
+            {
+                if(result.Value)
+                {
+                    icon.IPE.Inhalation = (viewModel.Inhalation == 0) ? 1 : viewModel.Inhalation;
+                    icon.IPE.PervVap    = (viewModel.PervVap == 0) ? 1 : viewModel.PervVap;
+                    icon.IPE.PercLiq    = (viewModel.PercLiq == 0) ? 1 : viewModel.PercLiq;
+                    icon.IPE.BetaRad    = (viewModel.BetaRad == 0) ? 1 : viewModel.BetaRad;
+                    
+                    IpeList.Add("Default");
+                    IpeSelected = IpeList.First(t => t == "Default");
+                }
+                else
+                {
+                    // If cancel is pressed
+                }
+            }
+
+        
+        }
+
+        #endregion
+
+        #region Vehicle Shelter
+
+        public ICommand VehicleShelterCommand
+        {
+            get
+            {
+                if (vehicleShelterCommand == null)
+                {
+                    vehicleShelterCommand = new RelayCommand(param => this.EditVehicleShelter());
+                }
+                return vehicleShelterCommand;
+            }
+        }
+
+        void EditVehicleShelter()
+        {
+            var viewModel = new VehicleShelterDialogViewModel();
+
+            bool? result = dialogService.ShowDialog(viewModel);
+            if (result.HasValue)
+            {
+                if (result.Value)
+                {
+                    if(viewModel.VehicleShelterTypeSelected == "With ColPro")
+                    {
+                        icon.Vehicle_Shelter.InhalationPercutaneousVapourProtection.SetWithColPro(viewModel.VentilationClassSelected);
+                    }
+                    if(viewModel.VehicleShelterTypeSelected == "Without ColPro")
+                    {
+                        icon.Vehicle_Shelter.InhalationPercutaneousVapourProtection.SetWithoutColPro(viewModel.AER, viewModel.Duration, viewModel.Occupancy);
+                    }
+                    else
+                    {
+                        icon.Vehicle_Shelter.InhalationPercutaneousVapourProtection.SetDefault();
+                    }
+                }
+                else
+                {
+                    // If cancel is pressed
+                }
+            }
+        }
+
+        public float NeutronRadiation
+        {
+            get
+            {
+                return icon.Vehicle_Shelter.RadiationProtection.NeutronRadiation;
+            }
+            set
+            {
+                icon.Vehicle_Shelter.RadiationProtection.NeutronRadiation = value;
+                OnPropertyChanged("NeutronRadiation");
+            }
+        }
+
+        public float GammaRadiation
+        {
+            get
+            {
+                return icon.Vehicle_Shelter.RadiationProtection.GammaRadiation;
+            }
+            set
+            {
+                icon.Vehicle_Shelter.RadiationProtection.GammaRadiation = value;
+                OnPropertyChanged("GammaRadiation");
+            }
+        }
+
+        public float BlastShielding
+        {
+            get
+            {
+                return icon.Vehicle_Shelter.BlastProtection.ProtectionFactor;
+            }
+            set
+            {
+                icon.Vehicle_Shelter.BlastProtection.ProtectionFactor = value;
+                OnPropertyChanged("BlastShielding");
+            }
+        }
+
+        public float Prophylaxis
+        {
+            get
+            {
+                return icon.Prophylaxis.ProtectionFactor;
+            }
+            set
+            {
+                icon.Prophylaxis.ProtectionFactor = value;
+                OnPropertyChanged("Prophylaxis");
+            }
+        }
+
+        private ObservableCollection<string> uniformList;
+
+        public ObservableCollection<string> UniformList
+        {
+            get
+            {
+                return uniformList;
+            }
+            set
+            {
+                if (uniformList == value)
+                    return;
+                uniformList = value;
+                OnPropertyChanged("UniformList");
+            }
+        }
+
+        private string uniformListSelected;
+
+        public string UniformListSelected
+        {
+            get { return uniformListSelected; }
+            set
+            {
+                uniformListSelected = value;
+                icon.Uniform.UniformType = uniformListSelected;
+                OnPropertyChanged("UniformListSelected");
+            }
+        }
+
+        void CreateUniformList()
+        {
+            UniformList = new ObservableCollection<string>();
+
+            UniformList.Add("Bare Skin");
+            UniformList.Add("BDU + T-shirt");
+            UniformList.Add("BDU + T-shirt + Airspace");
+            UniformList.Add("BDO");
+            UniformList.Add("BDO + Airspace");
+            UniformList.Add("BDO + Airspace + T-shirt");
+            UniformList.Add("BDO + BDU + T-shirt + Airspace");
+        }
+        #endregion
+
+
+
+        #endregion
+
+        #region Save Command
+
+        public ICommand SaveCommand
+        {
+            get
+            {
+                if(saveCommand == null)
+                {
+                    saveCommand = new RelayCommand(param => this.Save(),
+                                                    param => this.CanSave);
+                }
+
+                return saveCommand;
+            }
+        }
+
+        public void Save()
+        {
+            if (this.IsNewIcon)
+                iconRepository.AddIcon(icon);
+
+            MainWindowViewModel.Instance.CloseWorkspace();
+
+            base.OnPropertyChanged("DisplayName");
+        }
+
+        bool CanSave
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        bool IsNewIcon
+        {
+            get { return !iconRepository.ContainsIcon(icon); }
+        }
+
+        #endregion
+    }
+}
