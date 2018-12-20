@@ -10,7 +10,7 @@
 
     <!-- Clasic styles for create icon -->
     <UserControl.Resources>
-        <u:StringToFloatConverter x:Key="StringToFloat"/>
+        <u:StringToDoubleConverter x:Key="StringToDouble"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
 
         <Style TargetType="{x:Type Button}" x:Key="ButtonCommandStyle">
@@ -135,7 +135,7 @@
                         Text="{Binding Personnel, 
                             Mode=TwoWay,
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"
+                            Converter={StaticResource StringToDouble}}"
                         Grid.Row="1" Grid.Column="1"/>
                 <ComboBox  ItemsSource="{Binding BreathingRateList}"
                         SelectedItem="{Binding BreathingRateSelected}"
@@ -160,7 +160,7 @@
                     <TextBox Text="{Binding BreathingRateChemAg,
                             Mode=TwoWay,
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"
+                            Converter={StaticResource StringToDouble}}"
                          
                      Margin="10 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top"
                              Width="45"
@@ -168,7 +168,7 @@
                     <TextBox Text="{Binding BreathingRateBioAg,
                             Mode=TwoWay,
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"
+                            Converter={StaticResource StringToDouble}}"
                              Width="45"
                      Margin="0 0 0 0"
                      HorizontalAlignment="Center" VerticalAlignment="Top"
@@ -178,7 +178,7 @@
                             Mode=TwoWay,
                             FallbackValue='0.9',
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"
+                            Converter={StaticResource StringToDouble}}"
                         Grid.Row="3"  Grid.Column="1"/>
                 <ComboBox ItemsSource="{Binding IpeList}"
                       SelectedItem="{Binding IpeSelected, Mode=TwoWay}"
@@ -207,19 +207,19 @@
                 <TextBlock Text="Neutron Radiation" Grid.Row="2" Grid.Column="4"/>
                 <TextBox Text="{Binding NeutronRadiation, 
                                 UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource StringToFloat}}" Grid.Row="2" Grid.Column="5"/>
+                                Converter={StaticResource StringToDouble}}" Grid.Row="2" Grid.Column="5"/>
                 
                 <TextBlock Text="Gamma Radiation" Grid.Row="3" Grid.Column="4"/>
                 <TextBox Text="{Binding GammaRadiation, 
                                 UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource StringToFloat}}" Grid.Row="3" Grid.Column="5"/>
+                                Converter={StaticResource StringToDouble}}" Grid.Row="3" Grid.Column="5"/>
 
                 <TextBlock Text="Blast Shielding" Grid.Row="4" Grid.Column="4"/>
                 <TextBox Text="{Binding BlastShielding, 
                                 FallbackValue='1',
                                 TargetNullValue='1',
                                 UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource StringToFloat}}" 
+                                Converter={StaticResource StringToDouble}}" 
                          Grid.Row="4" Grid.Column="5"/>
 
                 <TextBlock Text="Prophylaxis" Grid.Row="5" Grid.Column="4"/>
@@ -227,7 +227,7 @@
                                 FallbackValue='1',
                                 TargetNullValue='1',
                                 UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource StringToFloat}}" 
+                                Converter={StaticResource StringToDouble}}" 
                          Grid.Row="5" Grid.Column="5"/>
 
                 <TextBlock Text="Uniform" Grid.Row="6" Grid.Column="4"/>

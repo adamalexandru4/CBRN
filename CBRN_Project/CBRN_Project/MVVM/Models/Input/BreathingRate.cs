@@ -8,9 +8,9 @@ namespace CBRN_Project.MVVM.Models
     {
         #region Properties
 
-        public float ChemAg_Ih { get; set; }
-        public float BioAg_RadPar_Ih { get; set; }
-        public float ChemAg_UnitlessFactor { get; set; }
+        public double ChemAg_Ih { get; set; }
+        public double BioAg_RadPar_Ih { get; set; }
+        public double ChemAg_UnitlessFactor { get; set; }
 
         private ActivityLevel breathingRateActivityLevel { get; set; } = ActivityLevel.Light;
         public string BreathingRateActivityLevel
@@ -101,7 +101,7 @@ namespace CBRN_Project.MVVM.Models
             }
         }
 
-        public BreathingRate(float ChemAg_Ih, float BioAg_RadPar_Ih)
+        public BreathingRate(double ChemAg_Ih, double BioAg_RadPar_Ih)
         {
             this.ChemAg_Ih = ChemAg_Ih;
             this.BioAg_RadPar_Ih = BioAg_RadPar_Ih;
