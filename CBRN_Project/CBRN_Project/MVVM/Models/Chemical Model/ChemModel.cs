@@ -16,7 +16,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
         private readonly List<ChemExIcon> exIcons;
 
         private readonly Dictionary<string, double> cohorts;
-        private readonly Dictionary<string, double> cips;
+        private readonly Dictionary<string, Dictionary<double, double>> CIPs;
 
         #endregion
 
@@ -30,7 +30,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
             exIcons    = new List<ChemExIcon>();
 
             cohorts = new Dictionary<string, double>();
-            cips    = new Dictionary<string, double>();
+            CIPs    = new Dictionary<string, Dictionary<double, double>>();
         }
 
         #endregion
@@ -61,6 +61,13 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
             cohortsUnit.Init(cohorts);
             cohortsUnit.CalcCohorts(exIcons, cohorts);
+        }
+
+        public void MakeCIPs()
+        {
+            CIPsUnit CIPsUnit = new CIPsUnit(dataService, agent, chTypes);
+
+            CIPsUnit.Init(CIPs);
         }
 
         #endregion

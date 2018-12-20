@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
+using System.Text;
 using CBRN_Project.Data_Access;
 
 namespace CBRN_Project.MVVM.Models.Chemical
 {
+    using Cohorts = Dictionary<string, double>;
+
     class CohortsUnit
     {
         #region Fields
@@ -39,7 +41,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         #region Methods
 
-        public void Init(Dictionary<string, double> cohorts)
+        public void Init(Cohorts cohorts)
         {
             DataTable tpsTable;
             List<DataTable> tpsTables = new List<DataTable>();
@@ -103,7 +105,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
             }
         }
 
-        public void CalcCohorts(List<ChemExIcon> exIcons, Dictionary<string, double> cohorts)
+        public void CalcCohorts(List<ChemExIcon> exIcons, Cohorts cohorts)
         {
             foreach (var exIcon in exIcons)
             {
