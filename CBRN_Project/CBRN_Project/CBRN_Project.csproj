@@ -67,6 +67,7 @@
     <Compile Include="Data Access\IconRemovedEventArgs.cs" />
     <Compile Include="Data Access\IconRepository.cs" />
     <Compile Include="MVVM\Models\Chemical Model\ChemModel.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\ChemReportUnit.cs" />
     <Compile Include="MVVM\Models\Chemical Model\CIPsUnit.cs" />
     <Compile Include="MVVM\Models\Chemical Model\CohortsUnit.cs" />
     <Compile Include="MVVM\Models\Chemical Model\ChemExIcon.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="MVVM\Models\Input\Challenge.cs" />
     <Compile Include="MVVM\Models\Input\EffChallenge.cs" />
     <Compile Include="MVVM\Models\Input\Icon.cs" />
+    <Compile Include="MVVM\Models\Input\MethParams.cs" />
     <Compile Include="MVVM\Models\Input\ProtFactors.cs" />
     <Compile Include="MVVM\Models\Input\Uniform.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\BlastShieldingProtection.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="MVVM\Models\Input\Prophylaxis.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\RadiationClass.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\VehicleShelter.cs" />
+    <Compile Include="MVVM\Models\Output\OutputData.cs" />
     <Compile Include="MVVM\ViewModels\CommandViewModel.cs" />
     <Compile Include="MVVM\ViewModels\CreateIconViewModel.cs" />
     <Compile Include="MVVM\ViewModels\IPEDialogViewModel.cs" />

@@ -9,28 +9,29 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         private readonly DataService dataService;
 
-        private readonly string agent;
-        private readonly List<string> chTypes;
+        private readonly MethParams methParams;
 
         private readonly List<Icon> icons;
         private readonly List<ChemExIcon> exIcons;
 
         private readonly Dictionary<string, double> cohorts;
-        private readonly Dictionary<string, Dictionary<double, double>> CIPs;
+        private readonly Dictionary<string, Dictionary<double, uint>> CIPs;
 
         #endregion
 
         #region Constructors
 
-        public ChemModel(DataService dataService, IEnumerable<Icon> icons)
+        public ChemModel(DataService dataService, MethParams methParams, IEnumerable<Icon> icons)
         {
             this.dataService = dataService;
+
+            this.methParams = methParams;
 
             this.icons = new List<Icon>(icons);
             exIcons    = new List<ChemExIcon>();
 
             cohorts = new Dictionary<string, double>();
-            CIPs    = new Dictionary<string, Dictionary<double, double>>();
+            CIPs    = new Dictionary<string, Dictionary<double, uint>>();
         }
 
         #endregion
@@ -39,8 +40,8 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         public void MakeExIcons()
         {
-            PbtiesUnit pbtiesUnit = new PbtiesUnit(dataService, agent, chTypes);
-            PopsUnit popsUnit = new PopsUnit(agent, chTypes);
+            PbtiesUnit pbtiesUnit = new PbtiesUnit(dataService, methParams.Agent, methParams.ChTypes);
+            PopsUnit popsUnit = new PopsUnit(methParams.Agent, methParams.ChTypes);
 
             ChemExIcon exIcon;
             foreach (var icon in icons)
@@ -57,7 +58,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         public void MakeCohorts()
         {
-            CohortsUnit cohortsUnit = new CohortsUnit(dataService, agent, chTypes);
+            CohortsUnit cohortsUnit = new CohortsUnit(dataService, methParams.Agent, methParams.ChTypes);
 
             cohortsUnit.Init(cohorts);
             cohortsUnit.CalcCohorts(exIcons, cohorts);
@@ -65,9 +66,14 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         public void MakeCIPs()
         {
-            CIPsUnit CIPsUnit = new CIPsUnit(dataService, agent, chTypes);
+            CIPsUnit CIPsUnit = new CIPsUnit(dataService, methParams.Agent, methParams.ChTypes);
 
             CIPsUnit.Init(CIPs);
+        }
+
+        public Dictionary<uint, OutputData> MakeReport()
+        {
+            return new ChemReportUnit(methParams, cohorts, CIPs).RunSimulation();
         }
 
         #endregion

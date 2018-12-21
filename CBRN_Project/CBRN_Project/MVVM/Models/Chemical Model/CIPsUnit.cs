@@ -6,7 +6,7 @@ using CBRN_Project.Data_Access;
 
 namespace CBRN_Project.MVVM.Models.Chemical
 {
-    using CIPs = Dictionary<string, Dictionary<double, double>>;
+    using CIPs = Dictionary<string, Dictionary<double, uint>>;
     
     class CIPsUnit
     {
@@ -46,7 +46,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
             DataTable ipTable;
             List<DataTable> ipTables = new List<DataTable>();
 
-            Dictionary<double, double> timeLvlPair;
+            Dictionary<double, uint> timeLvlPairs;
             foreach (var chType in chTypes)
             {
                 stringBuilder.Clear();
@@ -68,13 +68,13 @@ namespace CBRN_Project.MVVM.Models.Chemical
                     stringBuilder
                         .Append(agent).Append(':').Append(chType).Append(':').Append(ipTable.Columns[i].ColumnName);
 
-                    timeLvlPair = new Dictionary<double, double>();
+                    timeLvlPairs = new Dictionary<double, uint>();
                     foreach (DataRow row in ipTable.Rows)
                     {
-                        timeLvlPair.Add((double)row[ipTable.Columns[0].ColumnName], (double)row[ipTable.Columns[i].ColumnName]);
+                        timeLvlPairs.Add((double)row[ipTable.Columns[0].ColumnName], (uint)row[ipTable.Columns[i].ColumnName]);
                     }
 
-                    CIPs.Add(stringBuilder.ToString(), timeLvlPair);
+                    CIPs.Add(stringBuilder.ToString(), timeLvlPairs);
                 }
             }
 
@@ -89,25 +89,29 @@ namespace CBRN_Project.MVVM.Models.Chemical
                             .Append("::")
                             .Append(agent).Append(':').Append(chTypes[1]).Append(':').Append(ipTables[1].Columns[j].ColumnName);
 
-                        timeLvlPair = new Dictionary<double, double>();
+                        timeLvlPairs = new Dictionary<double, uint>();
                         foreach (DataRow row in ipTables[0].Rows)
                         {
-                            timeLvlPair.Add((double)row[ipTables[0].Columns[0].ColumnName], (double)row[ipTables[0].Columns[i].ColumnName]);
+                            timeLvlPairs.Add(
+                                (double)row[ipTables[0].Columns[0].ColumnName],
+                                (uint)row[ipTables[0].Columns[i].ColumnName]);
                         }
                         foreach (DataRow row in ipTables[1].Rows)
                         {
-                            if (timeLvlPair.ContainsKey((double)row[ipTables[1].Columns[0].ColumnName]) &&
-                                timeLvlPair[(double)row[ipTables[1].Columns[0].ColumnName]] < (double)row[ipTables[1].Columns[j].ColumnName])
+                            if (timeLvlPairs.ContainsKey((double)row[ipTables[1].Columns[0].ColumnName]) &&
+                                timeLvlPairs[(double)row[ipTables[1].Columns[0].ColumnName]] < (double)row[ipTables[1].Columns[j].ColumnName])
                             {
-                                timeLvlPair[(double)row[ipTables[1].Columns[0].ColumnName]] = (double)row[ipTables[1].Columns[j].ColumnName];
+                                timeLvlPairs[(double)row[ipTables[1].Columns[0].ColumnName]] = (uint)row[ipTables[1].Columns[j].ColumnName];
                             }
                             else
                             {
-                                timeLvlPair.Add((double)row[ipTables[1].Columns[0].ColumnName], (double)row[ipTables[1].Columns[j].ColumnName]);
+                                timeLvlPairs.Add(
+                                    (double)row[ipTables[1].Columns[0].ColumnName],
+                                    (uint)row[ipTables[1].Columns[j].ColumnName]);
                             }
                         }
 
-                        CIPs.Add(stringBuilder.ToString(), timeLvlPair);
+                        CIPs.Add(stringBuilder.ToString(), timeLvlPairs);
                     }
             }
 
