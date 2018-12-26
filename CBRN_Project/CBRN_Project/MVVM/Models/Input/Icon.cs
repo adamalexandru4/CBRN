@@ -18,7 +18,7 @@ namespace CBRN_Project.MVVM.Models
         public Uniform Uniform                                  { get; set; }
 
         public List<Challenge> Challenges                       { get; set; }
-
+        public List<EffChallenge> EffChallenges                 { get; set; }
         #endregion
 
         #region Constructors

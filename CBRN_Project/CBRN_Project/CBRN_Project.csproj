@@ -60,10 +60,14 @@
     <Compile Include="Data Access\IconAddedEventArgs.cs" />
     <Compile Include="Data Access\IconRemovedEventArgs.cs" />
     <Compile Include="Data Access\IconRepository.cs" />
+    <Compile Include="MVVM\Models\Engine\Radiological\RadiologicalAgent.cs" />
+    <Compile Include="MVVM\Models\Engine\Radiological\RadiologicalChallenge.cs" />
+    <Compile Include="MVVM\Models\Engine\Radiological\RadiologicalProperties.cs" />
     <Compile Include="MVVM\Models\Input\BreathingRate.cs" />
     <Compile Include="MVVM\Models\Input\Challenge.cs" />
     <Compile Include="MVVM\Models\Input\EffChallenge.cs" />
     <Compile Include="MVVM\Models\Input\Icon.cs" />
+    <Compile Include="MVVM\Models\Input\InjuryProfile.cs" />
     <Compile Include="MVVM\Models\Input\ProtFactors.cs" />
     <Compile Include="MVVM\Models\Input\Uniform.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\BlastShieldingProtection.cs" />
@@ -170,7 +174,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="MVVM\Models\Engine\Nuclear\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\add-icon.png" />
     <Resource Include="Resources\Images\edit-icon.png" />
