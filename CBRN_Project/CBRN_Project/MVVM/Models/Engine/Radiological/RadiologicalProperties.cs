@@ -43,7 +43,6 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
                 }
             }
         }
-        public int TotalTime                            { get; set; }
 
         //RDD Properties
         // Whole-Body factors 
