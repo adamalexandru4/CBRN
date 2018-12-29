@@ -25,9 +25,8 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
             private static bool Composite                                   { get; set; }
 
             //Tables
-            private static DataTable DailyNumber                            { get; set; }
-            private static DataTable PersonnelStatus                        { get; set; }
-          
+            private static DataTable OutputTable                            { get; set; }
+        
         #endregion
 
 
@@ -460,19 +459,17 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
         #region Output
         private static void CreateTables()
         {
-            List<string> dailyDetails = new List<string>
-                { "New KIA (R)", "New DOW (CRN)", "Sum of New Fatalities", "New WIA (RDD)", "New CONV (RDD)", "New RTD" };
-            List<string> personnelDetails = new List<string>
-                { "KIA—N", "DOW—CRN", "Sum of Fatalities", "RDD(1)", "Sum of WIA", "CONV (RDD)", "RTD" };
+            List<string> tableDetails = new List<string>
+                { "New KIA (N)", "New DOW (CRN)", "Sum of New Fatalities", "New WIA (Nuclear)", "New CONV (Nuclear)", "New RTD",
+                    "Sum of Fatalities", "Sum of WIA", "Sum of Conv", "RTD"};
 
-            DailyNumber = InitTable(dailyDetails);
-            PersonnelStatus = InitTable(personnelDetails);
+            OutputTable = InitTable(tableDetails);
 
         }
 
         public static DataTable InitTable(List<string> details)
         {
-            DataTable table = new DataTable("DailyNumbers");
+            DataTable table = new DataTable("Report");
 
             #region ColumnDescription
 

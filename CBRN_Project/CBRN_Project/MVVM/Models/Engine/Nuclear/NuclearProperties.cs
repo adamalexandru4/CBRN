@@ -6,7 +6,29 @@ using System.Threading.Tasks;
 
 namespace CBRN_Project.MVVM.Models.Engine.Nuclear
 {
-    class NuclearProperties
+    public class NuclearProperties
     {
+        //Initial Whole-Body Radiation
+        public double NucWholeBody          { get; set; }
+
+        //Blast
+        public double NucBlast              { get; set; }
+
+        //Thermal Fluence
+        public double NucThermal            { get; set; }
+
+        //APF
+        public double APFN                  { get; set; }
+        public double APFY                  { get; set; }
+        public double APFBlast              { get; set; }
+        public double APFThermal            { get; set; }
+
+        //Uniform
+        public double UniformThermal        { get; set; }
+
+        //Ranges
+        public int RangeBl           { get; set; }
+        public int RangeWB           { get; set; }
+        public int RangeTh           { get; set; }
     }
 }
