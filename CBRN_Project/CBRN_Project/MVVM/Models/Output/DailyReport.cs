@@ -1,6 +1,6 @@
 ﻿namespace CBRN_Project.MVVM.Models
 {
-    class OutputData
+    class DailyReport
     {
         public double NewKIA { get; set; } = 0;
         public double NewDOW { get; set; } = 0;
@@ -17,9 +17,9 @@
         public double WIA   { get; set; } = 0;
         public double RTD   { get; set; } = 0;
 
-        public static OutputData operator+ (OutputData left, OutputData right)
+        public static DailyReport operator+ (DailyReport left, DailyReport right)
         {
-            OutputData temp = new OutputData()
+            DailyReport temp = new DailyReport()
             {
                 NewKIA = left.NewKIA + right.NewKIA,
                 NewDOW = left.NewDOW + right.NewDOW,
@@ -38,6 +38,18 @@
             };
 
             return temp;
+        }
+
+        public void AddTotalsFrom(DailyReport right)
+        {
+            KIA  += right.KIA;
+            DOW  += right.DOW;
+            FAT  += right.FAT;
+            WIA1 += right.WIA1;
+            WIA2 += right.WIA2;
+            WIA3 += right.WIA3;
+            WIA  += right.WIA;
+            RTD  += right.RTD;
         }
     }
 }

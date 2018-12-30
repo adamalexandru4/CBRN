@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CBRN_Project.MVVM.Models.Chemical
 {
-    using Pops = Dictionary<string, double>;
+    using Pops = Dictionary<string, int>;
 
     class PopsUnit
     {
@@ -42,7 +42,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
             foreach (var pbty in pbties)
             {
-                pops.Add(pbty.Key, pbty.Value * icon.Personnel);
+                pops.Add(pbty.Key, Convert.ToInt32(pbty.Value * icon.Personnel));
             }
 
             return pops;
@@ -58,9 +58,9 @@ namespace CBRN_Project.MVVM.Models.Chemical
                         if (pbty1.Key.Contains(chTypes[1]))
                         {
                             stringBuilder.Clear();
-                            stringBuilder.Append(pbty0.Key).Append("::").Append(pbty1.Key);
+                            stringBuilder.Append(pbty0.Key).Append(":").Append(pbty1.Key);
 
-                            pops.Add(stringBuilder.ToString(), pbty0.Value * pbty1.Value * icon.Personnel);
+                            pops.Add(stringBuilder.ToString(), Convert.ToInt32(icon.Personnel * pbty0.Value * pbty1.Value));
                         }
 
             double pbtiesSum0 = 0;
@@ -70,11 +70,11 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
             foreach (var pbty in pbties)
                 if (pbty.Key.Contains(chTypes[0]))
-                    pops.Add(pbty.Key, pbty.Value * (1 - pbtiesSum1));
+                    pops.Add(pbty.Key, Convert.ToInt32(icon.Personnel * pbty.Value * (1 - pbtiesSum1)));
 
             foreach (var pbty in pbties)
                 if (pbty.Key.Contains(chTypes[1]))
-                    pops.Add(pbty.Key, pbty.Value * (1 - pbtiesSum0));
+                    pops.Add(pbty.Key, Convert.ToInt32(icon.Personnel * pbty.Value * (1 - pbtiesSum0)));
 
             return pops;
         }

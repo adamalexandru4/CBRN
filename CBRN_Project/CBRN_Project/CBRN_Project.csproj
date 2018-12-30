@@ -43,6 +43,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -67,12 +70,12 @@
     <Compile Include="Data Access\IconRemovedEventArgs.cs" />
     <Compile Include="Data Access\IconRepository.cs" />
     <Compile Include="MVVM\Models\Chemical Model\ChemModel.cs" />
-    <Compile Include="MVVM\Models\Chemical Model\ChemReportUnit.cs" />
-    <Compile Include="MVVM\Models\Chemical Model\CIPsUnit.cs" />
-    <Compile Include="MVVM\Models\Chemical Model\CohortsUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\ReportUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\CIPsUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\CohortsUnit.cs" />
     <Compile Include="MVVM\Models\Chemical Model\ChemExIcon.cs" />
-    <Compile Include="MVVM\Models\Chemical Model\PbtiesUnit.cs" />
-    <Compile Include="MVVM\Models\Chemical Model\PopsUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\PbtiesUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\PopsUnit.cs" />
     <Compile Include="MVVM\Models\Input\BreathingRate.cs" />
     <Compile Include="MVVM\Models\Input\Challenge.cs" />
     <Compile Include="MVVM\Models\Input\EffChallenge.cs" />
@@ -85,7 +88,7 @@
     <Compile Include="MVVM\Models\Input\Prophylaxis.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\RadiationClass.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\VehicleShelter.cs" />
-    <Compile Include="MVVM\Models\Output\OutputData.cs" />
+    <Compile Include="MVVM\Models\Output\DailyReport.cs" />
     <Compile Include="MVVM\ViewModels\CommandViewModel.cs" />
     <Compile Include="MVVM\ViewModels\CreateIconViewModel.cs" />
     <Compile Include="MVVM\ViewModels\IPEDialogViewModel.cs" />

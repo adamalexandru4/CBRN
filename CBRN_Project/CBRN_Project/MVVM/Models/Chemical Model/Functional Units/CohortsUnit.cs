@@ -6,7 +6,7 @@ using CBRN_Project.Data_Access;
 
 namespace CBRN_Project.MVVM.Models.Chemical
 {
-    using Cohorts = Dictionary<string, double>;
+    using Cohorts = Dictionary<string, int>;
 
     class CohortsUnit
     {
@@ -28,6 +28,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
             stringBuilder = new StringBuilder();
 
             this.dataService = dataService;
+
             this.agent = agent;
             this.chTypes = chTypes;
 
@@ -43,29 +44,26 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         public void Init(Cohorts cohorts)
         {
-            DataTable tpsTable;
+            DataTable       tpsTable;
             List<DataTable> tpsTables = new List<DataTable>();
 
             foreach (var chType in chTypes)
             {
                 stringBuilder.Clear();
-                stringBuilder.Append(agent).Append(' ').Append(chType).Append(" TPS");
+                stringBuilder.Append(agent).Append('_').Append(chType).Append("_TPS");
 
                 tpsTable = dataService.GetTable(stringBuilder.ToString());
                 if (tpsTable != null)
                 {
                     tpsTables.Add(tpsTable);
                 }
-                else
-                {
-                    throw new Exception($"Cannot find the TPS table in the database for the {agent} - {chType} pair.");
-                }
+                else throw new Exception($"Cannot find the TPS table in the database for the {agent} - {chType} pair.");
 
                 foreach (DataRow row in tpsTable.Rows)
                 {
                     stringBuilder.Clear();
                     stringBuilder
-                        .Append(agent).Append(':').Append(chType).Append(':').Append(row.Field<string>("Injury Profile Label"));
+                        .Append(agent).Append('_').Append(chType).Append('_').Append(row.Field<string>("InjuryProfileLabel"));
 
                     cohorts.Add(stringBuilder.ToString(), 0);
                 }
@@ -78,9 +76,9 @@ namespace CBRN_Project.MVVM.Models.Chemical
                     {
                         stringBuilder.Clear();
                         stringBuilder
-                            .Append(agent).Append(':').Append(chTypes[0]).Append(':').Append(row0.Field<string>("Injury Profile Label"))
-                            .Append("::")
-                            .Append(agent).Append(':').Append(chTypes[1]).Append(':').Append(row1.Field<string>("Injury Profile Label"));
+                            .Append(agent).Append('_').Append(chTypes[0]).Append('_').Append(row0.Field<string>("InjuryProfileLabel"))
+                            .Append(":")
+                            .Append(agent).Append('_').Append(chTypes[1]).Append('_').Append(row1.Field<string>("InjuryProfileLabel"));
 
                         cohorts.Add(stringBuilder.ToString(), 0);
                     }
@@ -94,11 +92,11 @@ namespace CBRN_Project.MVVM.Models.Chemical
                         {
                             stringBuilder.Clear();
                             stringBuilder
-                                .Append(agent).Append(':').Append(chTypes[0]).Append(':').Append(row0.Field<string>("Injury Profile Label"))
-                                .Append("::")
-                                .Append(agent).Append(':').Append(chTypes[1]).Append(':').Append(row1.Field<string>("Injury Profile Label"))
-                                .Append("::")
-                                .Append(agent).Append(':').Append(chTypes[2]).Append(':').Append(row2.Field<string>("Injury Profile Label"));
+                                .Append(agent).Append('_').Append(chTypes[0]).Append('_').Append(row0.Field<string>("InjuryProfileLabel"))
+                                .Append(":")
+                                .Append(agent).Append('_').Append(chTypes[1]).Append('_').Append(row1.Field<string>("InjuryProfileLabel"))
+                                .Append(":")
+                                .Append(agent).Append('_').Append(chTypes[2]).Append('_').Append(row2.Field<string>("InjuryProfileLabel"));
 
                             cohorts.Add(stringBuilder.ToString(), 0);
                         }
@@ -113,6 +111,24 @@ namespace CBRN_Project.MVVM.Models.Chemical
                 {
                     cohorts[pop.Key] += pop.Value;
                 }
+            }
+        }
+
+        public void RemoveNulls(Cohorts cohorts)
+        {
+            List<string> keysToBeRemoved = new List<string>();
+
+            foreach (var cohortKey in cohorts.Keys)
+            {
+                if (cohorts[cohortKey] == 0)
+                {
+                    keysToBeRemoved.Add(cohortKey);
+                }
+            }
+
+            foreach (var keyToBeRemoved in keysToBeRemoved)
+            {
+                cohorts.Remove(keyToBeRemoved);
             }
         }
 

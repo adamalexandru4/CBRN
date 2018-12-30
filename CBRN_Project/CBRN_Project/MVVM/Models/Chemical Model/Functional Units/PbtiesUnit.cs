@@ -22,13 +22,14 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         #endregion
 
-        #region Constructor
+        #region Constructors
 
         public PbtiesUnit(DataService dataService, string agent, List<string> chTypes)
         {
             stringBuilder = new StringBuilder();
 
             this.dataService = dataService;
+
             this.agent = agent;
             this.chTypes = chTypes;
 
@@ -54,7 +55,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
                 default:
                     {
                         return new Normal(0, 1).CumulativeDistribution(
-                            row.Field<double>("Probit Slope") *
+                            row.Field<double>("ProbitSlope") *
                             Math.Log10(
                                 icon.EffChallenges.Find(effCh => effCh.ChallengeType == chType).Value /
                                 row.Field<double>("ECt50")));
@@ -72,7 +73,7 @@ namespace CBRN_Project.MVVM.Models.Chemical
             foreach (var chType in chTypes)
             {
                 stringBuilder.Clear();
-                stringBuilder.Append(agent).Append(' ').Append(chType).Append(" TPS");
+                stringBuilder.Append(agent).Append('_').Append(chType).Append("_TPS");
 
                 tpsTable = dataService.GetTable(stringBuilder.ToString());
                 if (tpsTable == null)
@@ -80,12 +81,18 @@ namespace CBRN_Project.MVVM.Models.Chemical
                     throw new Exception($"Cannot find the TPS table in the database for the {agent} - {chType} pair.");
                 }
 
-                foreach (DataRow row in tpsTable.Rows)
+                double prevPbty = 0;
+                for (int i = tpsTable.Rows.Count - 1; i >= 0 ; --i)
                 {
                     stringBuilder.Clear();
-                    stringBuilder.Append(agent).Append(':').Append(chType).Append(':').Append(row.Field<string>("Injury Profile Label"));
+                    stringBuilder
+                        .Append(agent)
+                        .Append('_')
+                        .Append(chType)
+                        .Append('_')
+                        .Append(tpsTable.Rows[i].Field<string>("InjuryProfileLabel"));
 
-                    pbties.Add(stringBuilder.ToString(), CalcPbty(icon, chType, row));
+                    pbties.Add(stringBuilder.ToString(), - prevPbty + (prevPbty = CalcPbty(icon, chType, tpsTable.Rows[i])));
                 }
             }
 

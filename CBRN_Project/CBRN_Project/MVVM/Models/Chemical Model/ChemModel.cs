@@ -14,8 +14,8 @@ namespace CBRN_Project.MVVM.Models.Chemical
         private readonly List<Icon> icons;
         private readonly List<ChemExIcon> exIcons;
 
-        private readonly Dictionary<string, double> cohorts;
-        private readonly Dictionary<string, Dictionary<double, uint>> CIPs;
+        private readonly Dictionary<string, int> cohorts;
+        private readonly Dictionary<string, List<(double, int)>> CIPs;
 
         #endregion
 
@@ -30,8 +30,8 @@ namespace CBRN_Project.MVVM.Models.Chemical
             this.icons = new List<Icon>(icons);
             exIcons    = new List<ChemExIcon>();
 
-            cohorts = new Dictionary<string, double>();
-            CIPs    = new Dictionary<string, Dictionary<double, uint>>();
+            cohorts = new Dictionary<string, int>();
+            CIPs    = new Dictionary<string, List<(double, int)>>();
         }
 
         #endregion
@@ -40,16 +40,16 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         public void MakeExIcons()
         {
-            PbtiesUnit pbtiesUnit = new PbtiesUnit(dataService, methParams.Agent, methParams.ChTypes);
-            PopsUnit popsUnit = new PopsUnit(methParams.Agent, methParams.ChTypes);
+            PbtiesUnit  pbtiesUnit  = new PbtiesUnit(dataService, methParams.Agent, methParams.ChTypes);
+            PopsUnit    popsUnit    = new PopsUnit(methParams.Agent, methParams.ChTypes);
 
             ChemExIcon exIcon;
             foreach (var icon in icons)
             {
                 exIcon = new ChemExIcon()
                 {
-                    Icon = icon,
-                    Pbties = pbtiesUnit.CalcPbties(icon)
+                    Icon    = icon,
+                    Pbties  = pbtiesUnit.CalcPbties(icon)
                 };
                 exIcon.Pops = popsUnit.CalcPops(icon, exIcon.Pbties);
                 exIcons.Add(exIcon);
@@ -62,18 +62,21 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
             cohortsUnit.Init(cohorts);
             cohortsUnit.CalcCohorts(exIcons, cohorts);
+            cohortsUnit.RemoveNulls(cohorts);
         }
 
         public void MakeCIPs()
         {
-            CIPsUnit CIPsUnit = new CIPsUnit(dataService, methParams.Agent, methParams.ChTypes);
-
-            CIPsUnit.Init(CIPs);
+            new CIPsUnit(dataService, methParams.Agent, methParams.ChTypes).Init(cohorts, CIPs);
         }
 
-        public Dictionary<uint, OutputData> MakeReport()
+        public Dictionary<int, DailyReport> MakeReport()
         {
-            return new ChemReportUnit(methParams, cohorts, CIPs).RunSimulation();
+            Dictionary<int, DailyReport> report = new Dictionary<int, DailyReport>();
+
+            new ReportUnit(methParams, cohorts, CIPs).RunSimulation(report);
+
+            return report;
         }
 
         #endregion

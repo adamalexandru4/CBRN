@@ -6,6 +6,6 @@ namespace CBRN_Project.MVVM.Models.Chemical
     {
         public Icon                         Icon    { get; set; }
         public Dictionary<string, double>   Pbties  { get; set; }
-        public Dictionary<string, double>   Pops    { get; set; }
+        public Dictionary<string, int>      Pops    { get; set; }
     }
 }
