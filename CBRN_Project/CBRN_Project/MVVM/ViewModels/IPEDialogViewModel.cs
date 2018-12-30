@@ -52,9 +52,9 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Properties
         
-        private float inhalation;
+        private double inhalation;
 
-        public float Inhalation
+        public double Inhalation
         {
             get
             {
@@ -71,9 +71,9 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        private float pervVap;
+        private double pervVap;
 
-        public float PervVap
+        public double PervVap
         {
             get
             {
@@ -90,9 +90,9 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        private float percLiq;
+        private double percLiq;
 
-        public float PercLiq
+        public double PercLiq
         {
             get
             {
@@ -108,9 +108,9 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        private float betaRad;
+        private double betaRad;
 
-        public float BetaRad
+        public double BetaRad
         {
             get
             {

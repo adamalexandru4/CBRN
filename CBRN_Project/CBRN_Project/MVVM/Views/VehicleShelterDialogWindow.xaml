@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterOwner"
         Title="DialogWindow" Height="150" Width="354">
     <Window.Resources>
-        <u:StringToFloatConverter x:Key="StringToFloat"/>
+        <u:StringToDoubleConverter x:Key="StringToDouble"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
 
         <Style TargetType="TextBox">
@@ -60,16 +60,16 @@
             <TextBox Grid.Row="1" Grid.Column="0" 
                      Text="{Binding AER,
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}
+                            Converter={StaticResource StringToDouble}
                             }"/>
             <TextBox Grid.Row="1" Grid.Column="1"
                      Text="{Binding Duration, 
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"/>
+                            Converter={StaticResource StringToDouble}}"/>
             <TextBox Grid.Row="1" Grid.Column="2"
                      Text="{Binding Occupancy, 
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"/>
+                            Converter={StaticResource StringToDouble}}"/>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="AER"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="Duration"/>

@@ -47,7 +47,7 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Icon Properties
 
-        public float Personnel
+        public double Personnel
         {
             get { return icon.Personnel; }
             set
@@ -61,7 +61,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BodySurfaceArea
+        public double BodySurfaceArea
         {
             get
             {
@@ -131,7 +131,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BreathingRateChemAg
+        public double BreathingRateChemAg
         {
             get
             {
@@ -148,7 +148,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BreathingRateBioAg
+        public double BreathingRateBioAg
         {
             get
             {
@@ -329,7 +329,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float NeutronRadiation
+        public double NeutronRadiation
         {
             get
             {
@@ -342,7 +342,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float GammaRadiation
+        public double GammaRadiation
         {
             get
             {
@@ -355,7 +355,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BlastShielding
+        public double BlastShielding
         {
             get
             {
@@ -368,7 +368,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float Prophylaxis
+        public double Prophylaxis
         {
             get
             {

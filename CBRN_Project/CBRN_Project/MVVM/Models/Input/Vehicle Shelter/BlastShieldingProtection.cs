@@ -9,7 +9,7 @@ namespace CBRN_Project.MVVM.Models
     
     public class BlastShieldingProtection
     {
-        public float ProtectionFactor { get; set; } = 1;
+        public double ProtectionFactor { get; set; } = 1;
 
         public BlastShieldingProtection()
         {

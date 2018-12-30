@@ -176,9 +176,9 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Without ColPro
 
-        private float aer;
+        private double aer;
 
-        public float AER
+        public double AER
         {
             get
             {
@@ -195,9 +195,9 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        private float duration;
+        private double duration;
 
-        public float Duration
+        public double Duration
         {
             get
             {
@@ -214,9 +214,9 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        private float occupancy;
+        private double occupancy;
 
-        public float Occupancy
+        public double Occupancy
         {
             get
             {

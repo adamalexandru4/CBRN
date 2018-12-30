@@ -10,9 +10,9 @@ namespace CBRN_Project.MVVM.Models
 
     public class InhalationPercutaneousVapourProtection
     {
-        public float Inhalation { get; set; }
-        public float PercVap    { get; set; }
-        public float PercLiq    { get; set; } = float.PositiveInfinity;
+        public double Inhalation { get; set; }
+        public double PercVap    { get; set; }
+        public double PercLiq    { get; set; } = double.PositiveInfinity;
 
         public InhalationPercutaneousVapourProtection()
         {
@@ -36,16 +36,16 @@ namespace CBRN_Project.MVVM.Models
             }
         }
 
-        public void SetWithoutColPro(float _AER, float _Duration, float _Occupancy)
+        public void SetWithoutColPro(double _AER, double _Duration, double _Occupancy)
         {
-            double AER = (double)_AER;
-            double Duration = (double)_Duration;
-            double Occupancy = (double)_Occupancy;
+            double AER = _AER;
+            double Duration = _Duration;
+            double Occupancy = _Occupancy;
 
             double val = ((AER * Duration) / ((AER * Duration) + (Math.Pow(Math.E, AER * (-1) * Occupancy)) - (Math.Pow(Math.E, AER * (Duration - Occupancy)))));
 
-            Inhalation = (float)val;
-            PercVap = (float)val;
+            Inhalation = val;
+            PercVap = val;
         }
 
         public void SetDefault()

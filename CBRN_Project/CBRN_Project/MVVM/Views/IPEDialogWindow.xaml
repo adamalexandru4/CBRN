@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterOwner"
         Title="DialogWindow" Height="150" Width="354">
     <Window.Resources>
-        <u:StringToFloatConverter x:Key="StringToFloat"/>
+        <u:StringToDoubleConverter x:Key="StringToDouble"/>
 
         <Style TargetType="TextBox">
             <Setter Property="Width" Value="50"/>
@@ -46,20 +46,20 @@
             <TextBox Grid.Row="1" Grid.Column="0" 
                      Text="{Binding Inhalation,
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}
+                            Converter={StaticResource StringToDouble}
                             }"/>
             <TextBox Grid.Row="1" Grid.Column="1"
                      Text="{Binding PervVap, 
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"/>
+                            Converter={StaticResource StringToDouble}}"/>
             <TextBox Grid.Row="1" Grid.Column="2"
                      Text="{Binding PercLiq, 
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"/>
+                            Converter={StaticResource StringToDouble}}"/>
             <TextBox Grid.Row="1" Grid.Column="3"
                      Text="{Binding BetaRad, 
                             UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource StringToFloat}}"/>
+                            Converter={StaticResource StringToDouble}}"/>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Inhalation"/>
             <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Vertical" VerticalAlignment="Bottom">

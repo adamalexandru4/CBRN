@@ -35,9 +35,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,13 +65,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data Access\DataService.cs" />
     <Compile Include="Data Access\IconAddedEventArgs.cs" />
     <Compile Include="Data Access\IconRemovedEventArgs.cs" />
     <Compile Include="Data Access\IconRepository.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\ChemModel.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\ReportUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\CIPsUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\CohortsUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\ChemExIcon.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\PbtiesUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\PopsUnit.cs" />
     <Compile Include="MVVM\Models\Input\BreathingRate.cs" />
     <Compile Include="MVVM\Models\Input\Challenge.cs" />
     <Compile Include="MVVM\Models\Input\EffChallenge.cs" />
     <Compile Include="MVVM\Models\Input\Icon.cs" />
+    <Compile Include="MVVM\Models\Input\MethParams.cs" />
     <Compile Include="MVVM\Models\Input\ProtFactors.cs" />
     <Compile Include="MVVM\Models\Input\Uniform.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\BlastShieldingProtection.cs" />
@@ -71,6 +88,7 @@
     <Compile Include="MVVM\Models\Input\Prophylaxis.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\RadiationClass.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\VehicleShelter.cs" />
+    <Compile Include="MVVM\Models\Output\DailyReport.cs" />
     <Compile Include="MVVM\ViewModels\CommandViewModel.cs" />
     <Compile Include="MVVM\ViewModels\CreateIconViewModel.cs" />
     <Compile Include="MVVM\ViewModels\IPEDialogViewModel.cs" />
@@ -102,7 +120,7 @@
     <Compile Include="Utility\ObservableDictionary.cs" />
     <Compile Include="Utility\ObservableObject.cs" />
     <Compile Include="Utility\RelayCommand.cs" />
-    <Compile Include="Utility\StringToFloatConverter.cs" />
+    <Compile Include="Utility\StringToDoubleConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -162,6 +180,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
