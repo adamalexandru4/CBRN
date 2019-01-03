@@ -4,8 +4,9 @@ namespace CBRN_Project.MVVM.Models
 {
     class MethParams
     {
-        public string Agent { get; set; }
-        public List<string> ChTypes { get; set; }
+        public string       Agent     { get; set; }
+        public List<string> ChTypes   { get; set; }
+        public bool         CalcEffCh { get; set; }
 
         public double   T_MTF   { get; set; } = 30;
         public double   T_death { get; set; } = 15;

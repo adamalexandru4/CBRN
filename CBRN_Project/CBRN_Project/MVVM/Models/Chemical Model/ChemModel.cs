@@ -38,8 +38,15 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         #region Methods
 
+        private void CalcEffCh()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void MakeExIcons()
         {
+            if (methParams.CalcEffCh) CalcEffCh();
+
             PbtiesUnit  pbtiesUnit  = new PbtiesUnit(dataService, methParams.Agent, methParams.ChTypes);
             PopsUnit    popsUnit    = new PopsUnit(methParams.Agent, methParams.ChTypes);
 
