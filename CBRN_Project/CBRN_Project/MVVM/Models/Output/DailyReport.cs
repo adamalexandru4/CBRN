@@ -1,6 +1,6 @@
 ﻿namespace CBRN_Project.MVVM.Models
 {
-    class DailyReport
+    public class DailyReport
     {
         public double NewKIA { get; set; } = 0;
         public double NewDOW { get; set; } = 0;

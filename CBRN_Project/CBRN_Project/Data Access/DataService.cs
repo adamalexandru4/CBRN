@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace CBRN_Project.Data_Access
 {
-    class DataService
+    public class DataService
     {
         private const string connectionString = "Server=localhost;Database=CBRN;Trusted_Connection=True;";
 

@@ -1,4 +1,5 @@
-﻿using CBRN_Project.MVVM.ViewModels;
+﻿using CBRN_Project.Data_Access;
+using CBRN_Project.MVVM.ViewModels;
 using CBRN_Project.MVVM.Views;
 using CBRN_Project.Utility;
 using System;
@@ -26,7 +27,7 @@ namespace CBRN_Project
             dialogService.Register<IPEDialogViewModel, DialogWindow>();
             dialogService.Register<VehicleShelterDialogViewModel, VehicleShelterDialogWindow>();
 
-            MainWindowViewModel mainViewModel = new MainWindowViewModel(dialogService);
+            ApplicationViewModel mainViewModel = new ApplicationViewModel(dialogService);
 
             EventHandler handler = null;
             handler = delegate
@@ -34,13 +35,11 @@ namespace CBRN_Project
                 mainViewModel.RequestClose -= handler;
                 MainWindow.Close();
             };
+
             mainViewModel.RequestClose += handler;
 
             MainWindow.DataContext = mainViewModel;
-
-
             MainWindow.Show();
-           // MainWindow.MainFrame.Navigated += mainViewModel.ClearFrameCache;
         }
     }
 }
