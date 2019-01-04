@@ -62,7 +62,6 @@
     <Compile Include="Data Access\IconRemovedEventArgs.cs" />
     <Compile Include="Data Access\IconRepository.cs" />
     <Compile Include="MVVM\Models\Engine\Nuclear\NuclearAgent.cs" />
-    <Compile Include="MVVM\Models\Engine\Nuclear\NuclearChallenge.cs" />
     <Compile Include="MVVM\Models\Engine\Nuclear\NuclearProperties.cs" />
     <Compile Include="MVVM\Models\Engine\Radiological\RadiologicalAgent.cs" />
     <Compile Include="MVVM\Models\Engine\Radiological\RadiologicalChallenge.cs" />
