@@ -65,7 +65,7 @@
                        Grid.Row="3" VerticalAlignment="Top"
                        Grid.Column="0"/>
 
-            <TextBlock Text="Agent" Margin="0"
+            <!--<TextBlock Text="Agent" Margin="0"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Bottom"
                             Grid.Row="2" Grid.Column="1"/>
@@ -74,18 +74,18 @@
                           VerticalAlignment="Top"
                       Height="30" Width="100" Margin="10 0" HorizontalAlignment="Left"
                       Grid.Row="3"  Grid.Column="1"/>
-
+-->
             <TextBlock Text="Challenge type" Margin="0"
                            HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                           Grid.Row="2" Grid.Column="2"
+                           Grid.Row="2" Grid.Column="1"
                            />
-            <ComboBox Grid.Row="3" Grid.Column="2" 
-                          Margin="10 0" Height="30"
+            <ComboBox Grid.Row="3" Grid.Column="1" 
+                          Margin="10 10 0 0" Height="30"
                           IsEditable="True"
                           IsReadOnly="True"
                           Text="Select values"
                           ItemsSource="{Binding ChallengeTypes}"
-                          HorizontalAlignment="Center" VerticalAlignment="Top">
+                          HorizontalAlignment="Left" VerticalAlignment="Top">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <CheckBox Margin="5" 
@@ -95,23 +95,22 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBlock Text="Value" Margin="0"
-                           HorizontalAlignment="CEnter" VerticalAlignment="Bottom"
-                           Grid.Row="2" Grid.Column="3"/>
+            <TextBlock Text="Value" Margin="35 0 70 0"
+                           VerticalAlignment="Bottom"
+                           Grid.Row="2" Grid.Column="2"/>
             <TextBox Text="{Binding EffectiveValue,
                             Mode=TwoWay,
                             StringFormat=N2,
                             UpdateSourceTrigger=PropertyChanged,
                             Converter={StaticResource StringToDouble}}"
-                         VerticalAlignment="Top"
-                         Height="30" Width="100" HorizontalAlignment="Center" 
-                         Margin="10 0"
-                        Grid.Row="3"  Grid.Column="3"/>
+                          Height="30" Width="100" HorizontalAlignment="Left" Margin="10"
+                       
+                        Grid.Row="3"  Grid.Column="2"/>
             <Button Content="Add"
                         Margin="10 0" Height="30" Width="50"
-                        HorizontalAlignment="Left" VerticalAlignment="Top"
+                        HorizontalAlignment="Left" 
                         Command="{Binding AddCommand}"
-                        Grid.Row="3" Grid.Column="4"/>
+                        Grid.Row="3" Grid.Column="3"/>
         </Grid>
     </Grid>
 </UserControl>

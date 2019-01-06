@@ -18,22 +18,58 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
         <Image Source="/Resources/Images/logo.png" Grid.ColumnSpan="2"/>
-
-        <Button Grid.Row="1" Grid.Column="0"
+        
+        <Grid Grid.Row="1" Visibility="{Binding InputSchemeVisibility, 
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        Converter={StaticResource BooleanToVisibility}}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
                 Width="250" Height="75"
                 Content="Input scheme 1"
                 TextBlock.FontSize="25"
                 Command="{Binding SelectInputScheme1Command}"/>
-        <Button Grid.Row="1" Grid.Column="1"
+            <Button Grid.Column="1"
                 Width="250" Height="75"
                 Content="Input scheme 2"
                 TextBlock.FontSize="25"
                 Command="{Binding SelectInputScheme2Command}"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Visibility="{Binding FirstSelectionVisibility, 
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged,    
+                                        Converter={StaticResource BooleanToVisibility}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" 
+                     Margin="100 30 10 30"
+                     ItemsSource="{Binding TypesOfChallenges}" 
+                     SelectedItem="{Binding TypeOfChallengeSelected, Mode=TwoWay}"/>
+            <ComboBox Grid.Column="1"
+                      Visibility="{Binding AgentsTypesVisibility,
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource BooleanToVisibility}}"
+                      ItemsSource="{Binding AgentsTypesForChallenge}"
+                      SelectedItem="{Binding AgentSelected, Mode=TwoWay}"
+                      Margin="100 30 40 30"/>
+            <Button Grid.Column="2"
+                    Margin="70 25 100 25"
+                    Content="Next"
+                    Visibility="{Binding NextButtonVisibility, 
+                                Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged,
+                                Converter={StaticResource BooleanToVisibility}}"
+                    Command="{Binding NextCommand}"/>
+        </Grid>
     </Grid>
 </UserControl>

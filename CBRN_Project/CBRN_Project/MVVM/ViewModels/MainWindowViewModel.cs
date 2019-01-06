@@ -34,11 +34,14 @@ namespace CBRN_Project.MVVM.ViewModels
         int                                         inputScheme;
         IDialogService                              dialogService;
 
+        string                                      typeOfChallenge;
+        string                                      agent;
+
         #endregion
 
         #region Constructor
 
-        public MainWindowViewModel(IDialogService dialogService, int inputScheme)
+        public MainWindowViewModel(IDialogService dialogService, int inputScheme, string typeOfChallenge = null, string agent = null)
         {
             if (Instance == null)
                 Instance = this;
@@ -51,7 +54,10 @@ namespace CBRN_Project.MVVM.ViewModels
 
             MethParamsWorkspace = new MethParamsViewModel();
             Workspace           = MethParamsWorkspace;
-            
+
+            this.typeOfChallenge = typeOfChallenge;
+            this.agent = agent;
+
             this.inputScheme    = inputScheme;
             this.dialogService  = dialogService;
             base.DisplayName    = "MainWindow";
@@ -187,14 +193,13 @@ namespace CBRN_Project.MVVM.ViewModels
                 }
                 else
                 {
-                    CreateIconInput2ViewModel newWorkspace = new CreateIconInput2ViewModel(newIcon, iconRepository);
+                    CreateIconInput2ViewModel newWorkspace = new CreateIconInput2ViewModel(newIcon, iconRepository, agent);
                     /*this.Workspaces.Add(workspace);
                     this.SetActiveWorkspace(workspace);*/
                     Workspace = newWorkspace;
                     OnPropertyChanged("Workspace");
                 }
             }
-            
         }
         /*
         void SetActiveWorkspace(WorkspaceViewModel workspace)

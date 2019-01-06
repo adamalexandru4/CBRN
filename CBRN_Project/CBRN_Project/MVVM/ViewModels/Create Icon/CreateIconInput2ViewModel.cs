@@ -86,10 +86,12 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Constructor
 
-        public CreateIconInput2ViewModel(Icon newIcon, IconRepository newIconRepository)
+        public CreateIconInput2ViewModel(Icon newIcon, IconRepository newIconRepository, string _AgentSelected)
         {
             icon = newIcon ?? throw new ArgumentNullException("icon");
             iconRepository = newIconRepository ?? throw new ArgumentNullException("iconrepository");
+
+            this.AgentSelected = _AgentSelected;
 
             methParamsDisplay = new MethParamsDisplay();
             methParamsDisplay.ChTypes = new List<string>();
@@ -206,7 +208,6 @@ namespace CBRN_Project.MVVM.ViewModels
             MainWindowViewModel.methParamsInstance.CalcEffCh = false;
 
             // RESTORE NULL VALUES
-            AgentSelected = null;
             EffectiveValue = 0;
         }
 
