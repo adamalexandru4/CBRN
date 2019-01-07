@@ -11,6 +11,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
     class NuclearAgent
     {
         #region Properties
+        //Nuclear Properties 
         private static NuclearProperties NucProperties { get; set; }
 
         //Tables
@@ -20,11 +21,15 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
         #endregion
 
         #region Methods 
-        private static void CalculateNucChallenge(Icon icon)
+        public static void CalculateNucChallenge(List <Icon> icons)
         {
-            Init(icon);
             GenerateOutputTable();
-            CalculateChallenge(icon);
+            foreach (var icon in icons)
+            {
+                Init(icon);
+                CalculateChallenge(icon);
+            }
+            
         }
 
         public static void Init(Icon icon)
@@ -35,7 +40,6 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
             NucProperties.NucWholeBody = result.Values[0] / NucProperties.APFN
                                             + result.Values[1] / NucProperties.APFY;
             NucProperties.NucThermal = CalculateThermalChallenge(icon, result.Values[3]);
-
         }
 
         public static void CalculateChallenge(Icon icon)
@@ -43,7 +47,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
             CalculateRange();
             
             List <string> wiaBlast = CalculateBlastWIA(NucProperties.RangeBl);
-            List <string> wiaWb = CalculateWBWIA(NucProperties.RangeWB, true);
+            List <string> wiaWb = CalculateWBWIA(NucProperties.RangeWB, true);  //GSCF -> MEDICAL
             List <string> wiaThermal = CalculateThermalWIA(NucProperties.RangeTh);
 
             InterpretState(wiaWb, wiaBlast, wiaThermal, icon);
@@ -77,6 +81,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
         #endregion
 
         #region Compute
+        #region Calculate Range
         public static void CalculateRange()
         {
             NucProperties.RangeTh = CalculateThermalRange(NucProperties.NucThermal);
@@ -135,7 +140,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
             if (TestRange(45, double.PositiveInfinity, dose))
                 return 6;
             return -1;
-        }
+        } 
 
         private static bool TestRange(double left, double right, double value)
         {
@@ -143,14 +148,9 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
                 return true;
             return false;
         }
+        #endregion 
 
-        private static double CalculateThermalChallengedPersonsNumber(Icon icon)
-        {
-            double result = icon.Personnel;
-            //double fraction = icon.Vehicle_Shelter.BlastProtection.ProtectionFactor;
-            return result;
-        }
-
+        #region Calculate WIA
         private static List<string> CalculateBlastWIA(int range)
         {
             List<string> result = new List<string>();
@@ -204,6 +204,14 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
                     return new List<string> { "DOW" };
             }
         }
+        #endregion
+
+        private static double CalculateThermalChallengedPersonsNumber(Icon icon) // Need vehicle shelter protection factor
+        {
+            double result = icon.Personnel;
+            //double fraction = icon.Vehicle_Shelter.BlastProtection.ProtectionFactor;
+            return result;
+        }
 
         private static void InterpretState(List<string> wbstat, List<string> blstat, List<string> thstat, Icon icon)
         {
@@ -227,7 +235,8 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
             List<int> newRTD = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             List<int> newKIA = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-            if (NucProperties.NucBlast > getThresholdBlast(10)) //need o yield default 10 KT
+            //need of yield, default 10 KT
+            if (NucProperties.NucBlast > getThresholdBlast(10)) 
             {
                 newKIA[0] += Convert.ToInt32(icon.Personnel);
                 return;
@@ -294,18 +303,18 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
 
         private static void CompletTable(List<int> newKIA, List<int> newDOW, List<int> newWIA, List<int> newCONV, List<int> newRTD )
         {
-            for(int i = 0; i < newKIA.Count(); i++)
+            for(int i = 1; i <= newKIA.Count(); i++)
             {
-                OutputTable.Rows[0].SetField(i, OutputTable.Rows[0].Field());
-                OutputTable.Rows[1].SetField(i, 1);
-                OutputTable.Rows[2].SetField(i, 1);
-                OutputTable.Rows[3].SetField(i, 1);
-                OutputTable.Rows[4].SetField(i, 1);
-                OutputTable.Rows[5].SetField(i, 1);
-                OutputTable.Rows[6].SetField(i, 1);
-                OutputTable.Rows[7].SetField(i, 1);
-                OutputTable.Rows[8].SetField(i, 1);
-                OutputTable.Rows[9].SetField(i, 1);
+                OutputTable.Rows[0].SetField(i, Convert.ToInt32(OutputTable.Rows[0].ItemArray[i]) + newKIA[i-1]);
+                OutputTable.Rows[1].SetField(i, Convert.ToInt32(OutputTable.Rows[1].ItemArray[i]) + newDOW[i-1]);
+                OutputTable.Rows[2].SetField(i, Convert.ToInt32(OutputTable.Rows[2].ItemArray[i]) + newKIA[i-1] + newDOW[i-1]);
+                OutputTable.Rows[3].SetField(i, Convert.ToInt32(OutputTable.Rows[3].ItemArray[i]) + newWIA[i-1]);
+                OutputTable.Rows[4].SetField(i, Convert.ToInt32(OutputTable.Rows[4].ItemArray[i]) + newCONV[i-1]);
+                OutputTable.Rows[5].SetField(i, Convert.ToInt32(OutputTable.Rows[5].ItemArray[i]) + newRTD[i-1]);
+                //OutputTable.Rows[6].SetField(i, Convert.ToInt32(OutputTable.Rows[6].ItemArray[i]) + newKIA[i]);
+                //OutputTable.Rows[7].SetField(i, Convert.ToInt32(OutputTable.Rows[7].ItemArray[i]) + newKIA[i]);
+                //OutputTable.Rows[8].SetField(i, Convert.ToInt32(OutputTable.Rows[8].ItemArray[i]) + newKIA[i]);
+                //OutputTable.Rows[9].SetField(i, Convert.ToInt32(OutputTable.Rows[9].ItemArray[i]) + newKIA[i]);
             }
         }
 
@@ -336,8 +345,8 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
         private static void CreateTable()
         {
             List<string> dailyDetails = new List<string>
-                { "New KIA (N)", "New DOW (CRN)", "Sum of New Fatalities", "New WIA (Nuclear)", "New CONV (Nuclear)", "New RTD",
-                    "Sum of Fatalities", "Sum of WIA", "Sum of Conv", "Sum of RTD"};
+                { "New KIA (N)", "New DOW (CRN)", "Sum of New Fatalities", "New WIA (Nuclear)", "New CONV (Nuclear)", "New RTD" };
+                    //"Sum of Fatalities", "Sum of WIA", "Sum of Conv", "Sum of RTD"};
             OutputTable = Radiological.RadiologicalAgent.InitTable(dailyDetails);
         }
         #endregion
