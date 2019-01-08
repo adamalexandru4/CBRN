@@ -48,36 +48,48 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
 
         private static void InitChallengeType (Icon icon, List<string> izotop)
         {
-            //Verify if exists in challenges radiological agents
-            var results = icon.Challenges
-                                .Where(c => c.Agent == "Radiological");
-            
-            //if exist convert to eff chalanges and complete the challenge type
-            if (results != null)
+            //Verify if exist challenges for radiological agents
+            if (icon.Challenges != null)
             {
-                RadChallengeProperties.ResetValue();
-                var RDDResult = results.Where(c => c.ChallengeType.Contains("RDD"));
-                if (RDDResult != null)
+                var results = icon.Challenges
+                                .Where(c => c.Agent == "Radiological");
+
+                //if exist convert to eff chalanges and complete the challenge type
+                if (results.Count() > 0)
                 {
-                    RadChallengeProperties.Izotop = izotop;
+                    RadChallengeProperties.ResetValue();
+                    var RDDResult = results.Where(c => c.ChallengeType.Contains("RDD"));
+                    if (RDDResult.Count() > 0)
+                    {
+                        RadChallengeProperties.Izotop = izotop;
+                        foreach (var item in RDDResult)
+                        {
+                            ConvertToEffChallengeRDD(icon, item);
+                        }
+                    }
+                    var FalloutResult = results.Where(c => c.ChallengeType.Contains("Fallout"));
                     foreach (var item in RDDResult)
                     {
-                        ConvertToEffChallengeRDD(icon, item);
+                        ConvertToEffChallengeFallout(icon, item);
                     }
                 }
-                var FalloutResult = results.Where(c => c.ChallengeType.Contains("Fallout"));
-                foreach (var item in RDDResult)
-                {
-                    ConvertToEffChallengeFallout(icon, item);
-                }
+            }
+
+            //Verify if exist EffChallenge for radiological agent
+            if (icon.EffChallenges != null)
+            {
+                RadEffChallenge.DoseWholeBody = icon.EffChallenges[0].Value;
+                RadEffChallenge.DoseCoutanous = icon.EffChallenges[0].SecondValue;
             }
         }
 
         private static void Calculate(Icon icon)
         {
+            #region Injury Profile
             //InitInjuryProfile();
             //CalculateInjuryProfile();
             //CalculateCompInjuryProfile();
+            #endregion
 
             int wbrange = EstimateRangeWBDose();
             int cutrange = EstimateRangeCutDose();
@@ -152,7 +164,6 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
 
         public static void ConvertToEffChallengeFallout(Icon icon, Challenge item)
         {
-            //RadChallengeProperties.TotalTime += item.TimeValues.Last();
             double apf = getAPF(icon);
             double Zfactor = GetFalloutFactor("groundshine");
             RadChallengeProperties.WholeBodyGroundshineFallout += ComputeChallenge(item, apf, Zfactor);
@@ -261,7 +272,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
 
         private static int EstimateRangeCutDose()
         {
-            double CutDose = RadEffChallenge.DoseWholeBody;
+            double CutDose = RadEffChallenge.DoseCoutanous;
             if (CutDose < 2)
             {
                 SetCutDescription(0);
@@ -528,49 +539,43 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
                 }
             }
 
-            if(cut == false)
+            if (wbstate[2].Equals("2"))
             {
-                if(wbstate[2].Equals("2"))
+                RadChallengeProperties.newCONV[1] += Convert.ToInt32(icon.Personnel);
+                if (cutstate.Contains("RTD"))
                 {
-                    RadChallengeProperties.newCONV[1] += Convert.ToInt32(icon.Personnel);
+                    RadChallengeProperties.newCONV[ConvertToTable(Convert.ToInt32(wbstate[2]))] = Convert.ToInt32(icon.Personnel);
                     return;
                 }
                 else
                 {
-                    double TimeToDeath = 0;
-                    double deathdose = CalculateDeathDose();
-                    if (RadEffChallenge.DoseWholeBody > deathdose)
-                    {
-                        if (RadEffChallenge.DoseWholeBody < 100)
-                            TimeToDeath = 429 * Math.Pow(RadEffChallenge.DoseWholeBody, -1.3);                
-                        else
-                            TimeToDeath = 2;
-                        RadChallengeProperties.newDOW[ConvertToTable(Convert.ToInt32(TimeToDeath))] = Convert.ToInt32(icon.Personnel);
-                        return;
-                    }
+                    int day = Math.Max(Convert.ToInt32(cutstate[2]), Convert.ToInt32(wbstate[2]));
+                    RadChallengeProperties.newCONV[ConvertToTable(day)] = Convert.ToInt32(icon.Personnel);
+                    return;
+                }
+            }
+            else
+            {
+                double TimeToDeath = 0;
+                double deathdose = CalculateDeathDose();
+                if (RadEffChallenge.DoseWholeBody > deathdose)
+                {
+                    if (RadEffChallenge.DoseWholeBody < 100)
+                        TimeToDeath = 429 * Math.Pow(RadEffChallenge.DoseWholeBody, -1.3);
                     else
-                    {
-                        RadChallengeProperties.newCONV[8] = Convert.ToInt32(icon.Personnel);
-                        return;
-                    }
-                    
+                        TimeToDeath = 2;
+                    RadChallengeProperties.newDOW[ConvertToTable(Convert.ToInt32(TimeToDeath))] = Convert.ToInt32(icon.Personnel);
+                    return;
+                }
+                else
+                {
+                    RadChallengeProperties.newCONV[8] = Convert.ToInt32(icon.Personnel);
+                    return;
                 }
 
             }
 
-            if(cutstate.Contains("RTD"))
-            {
-                RadChallengeProperties.newCONV[ConvertToTable(Convert.ToInt32(wbstate[2]))] = Convert.ToInt32(icon.Personnel);
-                return;
-            }
-            else
-            {
-                int day = Math.Max(Convert.ToInt32(cutstate[2]),Convert.ToInt32(wbstate[2]));
-                RadChallengeProperties.newCONV[ConvertToTable(day)] = Convert.ToInt32(icon.Personnel);
-                return;
-            }
-
-        }
+    }
 
         private static void CompletTable()
         {

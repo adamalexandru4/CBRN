@@ -16,6 +16,6 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
 
 
         public RadiologicalChallenge()
-         : base ("None","None",0.0) { }
+         : base ("None", "None", 0.0, 0.0) { }
     }
 }
