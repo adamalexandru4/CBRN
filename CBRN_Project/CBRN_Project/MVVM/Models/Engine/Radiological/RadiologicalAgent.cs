@@ -23,6 +23,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
         private static InjuryProfile CutInjuryProfile                   { get; set; }
         private static InjuryProfile CompositeInjuryProfile             { get; set; }
         private static bool Composite                                   { get; set; }
+    
 
         //Tables
         private static DataTable OutputTable = new DataTable();
