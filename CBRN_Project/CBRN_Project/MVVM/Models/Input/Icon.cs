@@ -29,6 +29,7 @@ namespace CBRN_Project.MVVM.Models
             Vehicle_Shelter = new VehicleShelter();
             Prophylaxis = new Prophylaxis();
             Uniform = new Uniform();
+            EffChallenges = new List<EffChallenge>();
 
             ID = iconId;
             Name = "Icon " + ID.ToString();
