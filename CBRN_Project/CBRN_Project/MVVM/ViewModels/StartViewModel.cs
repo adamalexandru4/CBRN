@@ -49,7 +49,7 @@ namespace CBRN_Project.MVVM.ViewModels
 
         void InputScheme1Selected()
         {
-            applicationViewModel.CurrentPageViewModel = new MainWindowViewModel(dialogService, 1);
+            applicationViewModel.CurrentPageViewModel = new MainWindowViewModel(dialogService, 1, typeOfChallengeSelected, agentSelected);
         }
 
         #endregion
@@ -217,10 +217,8 @@ namespace CBRN_Project.MVVM.ViewModels
             set
             {
                 agentSelected = value;
-                if (value == "VX")
-                {
-                    NextButtonVisibility = true;
-                }
+                NextButtonVisibility = true;
+
                 OnPropertyChanged("AgentSelected");
             }
         }

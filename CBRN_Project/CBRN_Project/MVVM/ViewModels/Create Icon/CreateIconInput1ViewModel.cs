@@ -25,6 +25,7 @@ namespace CBRN_Project.MVVM.ViewModels
         RelayCommand changeToTextBoxBreathingRate;
         RelayCommand editIpeCommand;
         RelayCommand vehicleShelterCommand;
+        RelayCommand addChallengeCommand;
 
         #endregion
 
@@ -38,6 +39,8 @@ namespace CBRN_Project.MVVM.ViewModels
             this.dialogService = dialogService;
 
             this.DisplayName = "New icon";
+
+            ChallengeTypes = new ObservableCollection<ChallengeTypeClass>(MethParamsDisplay.GetChTypesList());
 
             CreateBreathingRateValues();
             CreateIpeClasses();
@@ -78,6 +81,61 @@ namespace CBRN_Project.MVVM.ViewModels
                 base.OnPropertyChanged("BodySurfaceArea");
             }
         }
+
+        #region Challenge
+
+        private double stepValue;
+
+        public double StepValue
+        {
+            get { return stepValue; }
+            set
+            {
+                stepValue = value;
+                OnPropertyChanged("StepValue");
+            }
+        }
+
+        private double challengeValue;
+
+        public double ChallengeValue
+        {
+            get
+            {
+                return challengeValue;
+            }
+            set
+            {
+                challengeValue = value;
+                OnPropertyChanged("ChallengeValue");
+            }
+        }
+
+        private ObservableCollection<ChallengeTypeClass> challengeTypes;
+
+        public ObservableCollection<ChallengeTypeClass> ChallengeTypes
+        {
+            get { return challengeTypes; }
+            set
+            {
+                challengeTypes = value;
+                OnPropertyChanged("ChallengeTypes");
+            }
+        }
+
+        private ChallengeTypeClass challengeSelected;
+
+        public ChallengeTypeClass ChallengeSelected
+        {
+            get { return challengeSelected; }
+            set
+            {
+                challengeSelected = value;
+                OnPropertyChanged("ChallengeSelected");
+            }
+        }
+
+        #endregion
 
         #region Breathing Rate
 
@@ -426,7 +484,37 @@ namespace CBRN_Project.MVVM.ViewModels
         }
         #endregion
 
+        #endregion
 
+        #region Add Challenge
+
+        public ICommand AddChallengeCommand
+        {
+            get
+            {
+                if(addChallengeCommand == null)
+                {
+                    addChallengeCommand = new RelayCommand(t => this.AddChallenge());
+                }
+
+                return addChallengeCommand;
+            }
+        }
+
+        void AddChallenge()
+        {
+             var challenge = new Challenge {
+                Agent = MainWindowViewModel.Instance.agent,
+                ChallengeType = ChallengeSelected.ChallengeType,
+                Step = StepValue,
+                Values = new List<double>()
+             };
+            challenge.Values.Add(ChallengeValue);
+            icon.Challenges.Add(challenge);
+
+            MainWindowViewModel.methParamsInstance.ChTypes.Add(challengeSelected.ChallengeType);
+            ChallengeValue = 0;
+        }
 
         #endregion
 
@@ -451,11 +539,13 @@ namespace CBRN_Project.MVVM.ViewModels
             if (this.IsNewIcon)
                 iconRepository.AddIcon(icon);
 
-            if(MainWindowViewModel.Instance.IconsList.IconsList.Count > 0)
+            MainWindowViewModel.methParamsInstance.CalcEffCh = true;
+
+            if (MainWindowViewModel.Instance.IconsList.IconsList.Count > 0)
                 MainWindowViewModel.Instance.MethParamsWorkspace.NewTabVisibility = true;
 
             MainWindowViewModel.Instance.Workspace = MainWindowViewModel.Instance.MethParamsWorkspace;
-
+            MainWindowViewModel.methParamsInstance.Agent = MainWindowViewModel.Instance.agent;
 
             base.OnPropertyChanged("DisplayName");
         }
@@ -464,7 +554,14 @@ namespace CBRN_Project.MVVM.ViewModels
         {
             get
             {
-                return true;
+                if (Personnel != 0 &&
+                   !String.IsNullOrEmpty(IpeSelected) &&
+                   StepValue != 0 &&
+                   icon.Challenges.Count > 0 &&
+                   NeutronRadiation != 0 && GammaRadiation != 0)
+                    return true;
+                else
+                    return false;
             }
         }
 
@@ -474,5 +571,6 @@ namespace CBRN_Project.MVVM.ViewModels
         }
 
         #endregion
+
     }
 }

@@ -21,7 +21,7 @@ namespace CBRN_Project.MVVM.ViewModels
         #region Fields
 
         public static MainWindowViewModel           Instance = null;
-        public readonly IconRepository                     iconRepository;
+        public readonly IconRepository              iconRepository;
         public static DataService                   dataServiceInstance = null;
         public static MethParams                    methParamsInstance = null;
 
@@ -31,11 +31,11 @@ namespace CBRN_Project.MVVM.ViewModels
         ViewModelBase                               workspace;
         MethParamsViewModel                         methParamsWorkspace;
 
-        int                                         inputScheme;
+        public int                                  inputScheme;
         IDialogService                              dialogService;
 
-        string                                      typeOfChallenge;
-        string                                      agent;
+        public string                               typeOfChallenge;
+        public string                               agent;
 
         #endregion
 
@@ -180,11 +180,16 @@ namespace CBRN_Project.MVVM.ViewModels
 
         void CreateNewIcon()
         {
+            MethParamsWorkspace.NewTabVisibility = false;
+            MethParamsWorkspace.InsertMethParamsVisibility = false;
+
             if (Workspace == methParamsWorkspace)
             {
+
                 Icon newIcon = Icon.CreateNewIcon(IconRepository.IconId);
                 if (inputScheme == 1)
                 {
+
                     CreateIconInput1ViewModel newWorkspace = new CreateIconInput1ViewModel(newIcon, iconRepository, dialogService);
                     /* this.Workspaces.Add(workspace);
                     this.SetActiveWorkspace(workspace);*/
@@ -248,8 +253,14 @@ namespace CBRN_Project.MVVM.ViewModels
         void RemoveIcon()
         {
             iconsList.RemoveIcon();
+            
             if (iconsList.IconsList.Count == 0)
                 this.methParamsWorkspace.NewTabVisibility = false;
+
+            if (Workspace is DailyReportViewModel)
+                Workspace = MethParamsWorkspace;
+
+
         }
 
         #endregion

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace CBRN_Project.MVVM.Models
 {
-    public enum ChemAgents { GA, GB, GD, GF, VX, HD, CG, CL2, NH3, AC, CK, H2S }
+    public enum ChemAgents { GA, GB, GD, GF, VX, CL2, NH3, AC, H2S } // CK, HD, CG
     public enum RadAgents { RDD, Fallout }
     public enum NuclearAgents { IWBR, Blast, ThermFluence }
     public enum BioAgents { Anthrax, Brucellosis, Glanders, Melioidosis }

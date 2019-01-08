@@ -104,7 +104,6 @@
                             UpdateSourceTrigger=PropertyChanged,
                             Converter={StaticResource StringToDouble}}"
                           Height="30" Width="100" HorizontalAlignment="Left" Margin="10"
-                       
                         Grid.Row="3"  Grid.Column="2"/>
             <Button Content="Add"
                         Margin="10 0" Height="30" Width="50"

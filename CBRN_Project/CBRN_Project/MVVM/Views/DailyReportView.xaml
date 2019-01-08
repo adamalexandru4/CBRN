@@ -40,6 +40,22 @@
                                     Binding="{Binding NewWIA}" />
                 <DataGridTextColumn Header="New RTD" 
                                     Binding="{Binding NewRTD}" />
+                <DataGridTextColumn Header="KIA" 
+                                    Binding="{Binding KIA}" />
+                <DataGridTextColumn Header="DOW" 
+                                    Binding="{Binding DOW}" />
+                <DataGridTextColumn Header="FAT" 
+                                    Binding="{Binding FAT}" />
+                <DataGridTextColumn Header="WIA1" 
+                                    Binding="{Binding WIA1}" />
+                <DataGridTextColumn Header="WIA2" 
+                                    Binding="{Binding WIA2}" />
+                <DataGridTextColumn Header="WIA3" 
+                                    Binding="{Binding WIA3}" />
+                <DataGridTextColumn Header="WIA" 
+                                    Binding="{Binding WIA}" />
+                <DataGridTextColumn Header="RTD" 
+                                    Binding="{Binding RTD}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

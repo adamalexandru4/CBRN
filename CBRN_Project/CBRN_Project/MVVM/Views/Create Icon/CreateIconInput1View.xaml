@@ -42,6 +42,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.2*"/>
@@ -63,6 +64,12 @@
                        Grid.Column="0"/>
             <TextBlock Text="IPE Class:"              
                        Grid.Row="4"
+                       Grid.Column="0"/>
+            <TextBlock Text="Step:"              
+                       Grid.Row="5"
+                       Grid.Column="0"/>
+            <TextBlock Text="Challenge values:"              
+                       Grid.Row="6"
                        Grid.Column="0"/>
 
             <TextBox x:Name="personeelTxt" 
@@ -122,6 +129,35 @@
                       SelectedItem="{Binding IpeSelected, Mode=TwoWay}"
                       Height="20" Width="90" Margin="10" HorizontalAlignment="Left"
                       Grid.Row="4"  Grid.Column="1"/>
+            <TextBox Text="{Binding StepValue,
+                            Mode=TwoWay,
+                            UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource StringToDouble}}"
+                        Height="20" Width="90" HorizontalAlignment="Left" Margin="10"
+                        Grid.Row="5"  Grid.Column="1"/>
+            <TextBox Text="{Binding ChallengeValue,
+                            Mode=TwoWay,
+                            StringFormat=N2,
+                            UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource StringToDouble}}"
+                         Height="20" Width="40" HorizontalAlignment="Left" Margin="10"
+                        Grid.Row="6"  Grid.Column="2"/>
+            <ComboBox Grid.Row="6" Grid.Column="1" 
+                          Margin="10" Height="20" Width="110"
+                          IsEditable="True"
+                          IsReadOnly="True"
+                          Text="Select value"
+                          ItemsSource="{Binding ChallengeTypes}"
+                          SelectedItem="{Binding ChallengeSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          DisplayMemberPath="ChallengeType"
+                          HorizontalAlignment="Left" VerticalAlignment="Center">
+            </ComboBox>
+
+            <Button Content="Add"
+                        Margin="10" Height="20" Width="40"
+                        HorizontalAlignment="Right" 
+                        Command="{Binding AddChallengeCommand}"
+                        Grid.Row="6" Grid.Column="2"/>
 
             <Button Content="Edit" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left"
                         Height="20" Width="90" Margin="10"

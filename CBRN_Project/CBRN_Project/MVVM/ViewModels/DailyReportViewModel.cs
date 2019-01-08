@@ -17,6 +17,15 @@ namespace CBRN_Project.MVVM.ViewModels
         public double NewWIA { get; set; } = 0;
         public double NewRTD { get; set; } = 0;
 
+        public double KIA { get; set; } = 0;
+        public double DOW { get; set; } = 0;
+        public double FAT { get; set; } = 0;
+        public double WIA1 { get; set; } = 0;
+        public double WIA2 { get; set; } = 0;
+        public double WIA3 { get; set; } = 0;
+        public double WIA { get; set; } = 0;
+        public double RTD { get; set; } = 0;
+
         public int Day
         {
             get { return day; }
@@ -52,7 +61,15 @@ namespace CBRN_Project.MVVM.ViewModels
                         NewDOW = elem.Value.NewDOW,
                         NewFAT = elem.Value.NewFAT,
                         NewWIA = elem.Value.NewWIA,
-                        NewRTD = elem.Value.NewRTD
+                        NewRTD = elem.Value.NewRTD,
+                        KIA = elem.Value.KIA,
+                        DOW = elem.Value.DOW,
+                        FAT = elem.Value.FAT,
+                        WIA1 = elem.Value.WIA1,
+                        WIA2 = elem.Value.WIA2,
+                        WIA3 = elem.Value.WIA3,
+                        WIA = elem.Value.WIA,
+                        RTD = elem.Value.RTD
                     });
                 }
             }

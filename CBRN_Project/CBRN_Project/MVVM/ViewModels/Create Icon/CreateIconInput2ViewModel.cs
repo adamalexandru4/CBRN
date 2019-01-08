@@ -236,6 +236,7 @@ namespace CBRN_Project.MVVM.ViewModels
 
             if (MainWindowViewModel.Instance.IconsList.IconsList.Count > 0)
                 MainWindowViewModel.Instance.MethParamsWorkspace.NewTabVisibility = true;
+
             MainWindowViewModel.Instance.Workspace = MainWindowViewModel.Instance.MethParamsWorkspace;
 
             base.OnPropertyChanged("DisplayName");
