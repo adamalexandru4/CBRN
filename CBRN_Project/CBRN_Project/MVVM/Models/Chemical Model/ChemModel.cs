@@ -40,7 +40,58 @@ namespace CBRN_Project.MVVM.Models.Chemical
 
         private void CalcEffCh()
         {
-            throw new System.NotImplementedException();
+            foreach (var icon in icons)
+                foreach (var ch in icon.Challenges)
+                {
+                    double z = 1;
+                    switch (ch.ChallengeType)
+                    {
+                        case "Inhaled":
+                            {
+                                z = icon.BreathingRate.ChemAg_UnitlessFactor;
+                            } break;
+                        case "PercVap":
+                        case "PercLiq":
+                            {
+                                z = icon.BodySurfaceArea;
+                            } break;
+                    }
+
+                    double apf = 1;
+                    switch (ch.ChallengeType)
+                    {
+                        case "Inhaled":
+                            {
+                                apf =
+                                    icon.IPE.Inhalation *
+                                    icon.Vehicle_Shelter.InhalationPercutaneousVapourProtection.Inhalation *
+                                    icon.Prophylaxis.ProtectionFactor;
+                            } break;
+                        case "PercVap":
+                            {
+                                apf =
+                                    icon.IPE.PervVap *
+                                    icon.Vehicle_Shelter.InhalationPercutaneousVapourProtection.PercVap *
+                                    icon.Prophylaxis.ProtectionFactor;
+                            } break;
+                        case "PercLiq":
+                            {
+                                apf =
+                                    icon.IPE.PercLiq *
+                                    icon.Vehicle_Shelter.InhalationPercutaneousVapourProtection.PercLiq *
+                                    icon.Prophylaxis.ProtectionFactor;
+                            } break;
+                    }
+
+                    EffChallenge effCh = new EffChallenge(ch.Agent, ch.ChallengeType, 0);
+                    for (int i = 1; i < ch.Values.Count; ++i)
+                    {
+                        effCh.Value += ch.Values[i] - ch.Values[i - 1];
+                    }
+                    effCh.Value = effCh.Value * z / apf;
+
+                    icon.EffChallenges.Add(effCh);
+                }
         }
 
         public void MakeExIcons()
