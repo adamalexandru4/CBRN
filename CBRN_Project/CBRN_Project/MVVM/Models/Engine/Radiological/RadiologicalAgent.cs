@@ -12,39 +12,41 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
     {
         #region Properties
 
-            //Class RadiologicalProperties contain required data to calculate challenge
-            private static RadiologicalProperties RadChallengeProperties    { get; set; }
+        //Class RadiologicalProperties contain required data to calculate challenge
+        private static RadiologicalProperties RadChallengeProperties = new RadiologicalProperties();
 
-            //Class derivated from EffChallenge 
-            private static RadiologicalChallenge RadEffChallenge            { get; set; }
+        //Class derivated from EffChallenge 
+        private static RadiologicalChallenge RadEffChallenge = new RadiologicalChallenge();
             
-            //Injury Profile
-            private static InjuryProfile WBInjuryProfile                    { get; set; }
-            private static InjuryProfile CutInjuryProfile                   { get; set; }
-            private static InjuryProfile CompositeInjuryProfile             { get; set; }
-            private static bool Composite                                   { get; set; }
+        //Injury Profile
+        private static InjuryProfile WBInjuryProfile                    { get; set; }
+        private static InjuryProfile CutInjuryProfile                   { get; set; }
+        private static InjuryProfile CompositeInjuryProfile             { get; set; }
+        private static bool Composite                                   { get; set; }
 
-            //Tables
-            private static DataTable OutputTable                            { get; set; }
+        //Tables
+        private static DataTable OutputTable = new DataTable();
         
         #endregion
 
 
-        #region Methods
+        #region Main Methods
        
 
-        public static void CalculateChallenge (Icon icon, string izotop)
+        public static void CalculateChallenge (List<Icon> icons, List<string> izotop)
         {
-            //verify type of Challenge and if it is necessary  CalculateEffChallenge
-            InitChallengeType(icon, izotop);
+            GenerateOutput();
             
-            Calculate(icon);
-            
-            GenerateOutput(icon);
+            foreach (var icon in icons)
+            {
+                InitChallengeType(icon, izotop);
+
+                Calculate(icon);
+            }
 
         }
 
-        private static void InitChallengeType (Icon icon, string izotop)
+        private static void InitChallengeType (Icon icon, List<string> izotop)
         {
             //Verify if exists in challenges radiological agents
             var results = icon.Challenges
@@ -53,10 +55,15 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
             //if exist convert to eff chalanges and complete the challenge type
             if (results != null)
             {
+                RadChallengeProperties.ResetValue();
                 var RDDResult = results.Where(c => c.ChallengeType.Contains("RDD"));
-                foreach (var item in RDDResult)
-                { 
-                    ConvertToEffChallengeRDD(icon, item);
+                if (RDDResult != null)
+                {
+                    RadChallengeProperties.Izotop = izotop;
+                    foreach (var item in RDDResult)
+                    {
+                        ConvertToEffChallengeRDD(icon, item);
+                    }
                 }
                 var FalloutResult = results.Where(c => c.ChallengeType.Contains("Fallout"));
                 foreach (var item in RDDResult)
@@ -68,87 +75,59 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
 
         private static void Calculate(Icon icon)
         {
-            InitInjuryProfile();
-            CalculateInjuryProfile();
-            CalculateCompInjuryProfile();
+            //InitInjuryProfile();
+            //CalculateInjuryProfile();
+            //CalculateCompInjuryProfile();
 
-            double TimeToDeath;
-            CalculateDeathDose();
-            if (RadEffChallenge.DoseWholeBody > RadEffChallenge.DeathDose)
-            {
-                if (RadEffChallenge.DoseWholeBody < 100)
-                    TimeToDeath = 429 * Math.Pow(RadEffChallenge.DoseWholeBody, -1.3);
-                else
-                {
-                    TimeToDeath = 24 * 60;
-                }
-            }
+            int wbrange = EstimateRangeWBDose();
+            int cutrange = EstimateRangeCutDose();
+
+            List<string> wbstate = GetStateWB(wbrange);
+            List<string> cutstate = GetStateCut(cutrange);
+
+            InterpretState(wbstate, cutstate, icon);
+            CompletTable();
         }
 
-        private static void GenerateOutput(Icon icon)
+        private static void GenerateOutput()
         {
-            CreateTables();
-            
+            CreateTables();   
         }
-
 
         #endregion
 
 
 
         #region Auxiliar methods
-        #region Challenge
+
+        #region RDD Challange
         public static void ConvertToEffChallengeRDD(Icon icon, Challenge item)
         {
-            //RadChallengeProperties.TotalTime += item.TimeValues.Last();
             double apf = getAPF(icon);
-            double Zfactor = GetRDDFactor("cloudshine");
-            RadChallengeProperties.CutaneousCloudShine += ComputeChallenge(item, apf, Zfactor);
-            RadChallengeProperties.WholeBodyCloudShine += ComputeChallenge(item, apf, Zfactor);
+            double Zfactor;
 
-            Zfactor = GetRDDFactor("groundshine");
-            RadChallengeProperties.WholeBodyGroundshine += ComputeChallenge(item, apf, Zfactor);
-            RadChallengeProperties.CutaneousGroundShine += ComputeChallenge(item, apf, Zfactor);
+            for (int i = 0; i < RadChallengeProperties.Izotop.Count(); i++)
+            {
+                Zfactor = GetRDDFactor("cloudshine", RadChallengeProperties.Izotop[i]);
+                RadChallengeProperties.CutaneousCloudShine += ComputeChallenge(item, apf, Zfactor);
+                RadChallengeProperties.WholeBodyCloudShine += ComputeChallenge(item, apf, Zfactor);
 
-            Zfactor = GetRDDFactor("skin");
-            RadChallengeProperties.CutaneousSkin += ComputeChallenge(item, apf, Zfactor);
-           
-            Zfactor = GetRDDFactor("inhalation");
-            RadChallengeProperties.WholeBodyInhalation += ComputeChallenge(item, apf, Zfactor);
+                Zfactor = GetRDDFactor("groundshine", RadChallengeProperties.Izotop[i]);
+                RadChallengeProperties.WholeBodyGroundshine += ComputeChallenge(item, apf, Zfactor);
+                RadChallengeProperties.CutaneousGroundShine += ComputeChallenge(item, apf, Zfactor);
+
+                Zfactor = GetRDDFactor("skin", RadChallengeProperties.Izotop[i]);
+                RadChallengeProperties.CutaneousSkin += ComputeChallenge(item, apf, Zfactor);
+
+                Zfactor = GetRDDFactor("inhalation", RadChallengeProperties.Izotop[i]);
+                RadChallengeProperties.WholeBodyInhalation += ComputeChallenge(item, apf, Zfactor);
+            }
 
             RadEffChallenge.DoseCoutanous += RadChallengeProperties.GetCutaneousDose();
             RadEffChallenge.DoseWholeBody += RadChallengeProperties.GetWholeBodyDose();
         }
 
-        public static void ConvertToEffChallengeFallout(Icon icon, Challenge item)
-        {
-            //RadChallengeProperties.TotalTime += item.TimeValues.Last();
-            double apf = getAPF(icon);
-            double Zfactor = GetFalloutFactor("groundshine");
-            RadChallengeProperties.WholeBodyGroundshineFallout += ComputeChallenge(item, apf, Zfactor);
-            RadChallengeProperties.CutaneousSkinFallout += ComputeChallenge(item, apf, Zfactor);
-            Zfactor = GetFalloutFactor("skin beta");
-            RadChallengeProperties.CutaneousSkinFallout += ComputeChallenge(item, apf, Zfactor);
-            Zfactor = GetFalloutFactor("skin");
-            RadChallengeProperties.CutaneousSkinFallout += ComputeChallenge(item, apf, Zfactor);
-
-            RadEffChallenge.DoseCoutanous += RadChallengeProperties.CutaneousSkinFallout;
-            RadEffChallenge.DoseWholeBody += RadChallengeProperties.WholeBodyGroundshineFallout;
-        }
-
-        public static double ComputeChallenge(Challenge item, double apf, double Zfactor)
-        {
-            var diff = item.Values.First() / apf;
-            for (int i = 1; i < item.Values.Count(); i++)
-            {
-                diff += (item.Values[i] - item.Values[i - 1]) / apf;
-            }
-            var result = diff * Zfactor;
-
-            return result;
-        }
-
-        private static double GetRDDFactor(string context)
+        private static double GetRDDFactor(string context, string izotop)
         {
             switch (context)
             {
@@ -165,7 +144,27 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
                     return 1;
             }
 
-        }   
+        }
+
+        #endregion
+
+        #region Fallout Challenge
+
+        public static void ConvertToEffChallengeFallout(Icon icon, Challenge item)
+        {
+            //RadChallengeProperties.TotalTime += item.TimeValues.Last();
+            double apf = getAPF(icon);
+            double Zfactor = GetFalloutFactor("groundshine");
+            RadChallengeProperties.WholeBodyGroundshineFallout += ComputeChallenge(item, apf, Zfactor);
+            Zfactor = GetFalloutFactor("skin");
+            RadChallengeProperties.CutaneousSkinFallout += ComputeChallenge(item, apf, Zfactor);
+
+
+            RadEffChallenge.DoseWholeBody += RadChallengeProperties.WholeBodyGroundshineFallout;
+            RadEffChallenge.DoseCoutanous += RadChallengeProperties.CutaneousSkinFallout
+                                          + RadChallengeProperties.WholeBodyGroundshineFallout;
+            
+        }
 
         private static double GetFalloutFactor(string context)
         {
@@ -173,13 +172,26 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
             {
                 case "groundshine":
                     return 1;
-                case "skin beta":
-                    return 1;
                 case "skin":
                     return 1;
                 default:
-                    return 1; 
+                    return 1;
             }
+        }
+
+        #endregion
+
+        #region Auxiliar Challenge Methods
+        public static double ComputeChallenge(Challenge item, double apf, double Zfactor)
+        {
+            var diff = item.Values.First() / apf;
+            for (int i = 1; i < item.Values.Count(); i++)
+            {
+                diff += (item.Values[i] - item.Values[i - 1]) / apf;
+            }
+            var result = diff * Zfactor;
+
+            return result;
         }
 
         public static double getAPF(Icon icon)
@@ -194,22 +206,31 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
             return apf;
         }
 
-        public static void CalculateDeathDose()
+        public static double CalculateDeathDose()
         {
-            double LD = getLD();
+            double LD = getLD(true, false);     //Need of MT and GCSF
             double exp = RadEffChallenge.DoseWholeBody / 60;
-            double denominator = -0.2351 * Math.Pow(0.8946,exp) * Math.Pow(exp,-0.2876) + 0.9947;
-            RadEffChallenge.DeathDose = LD / denominator;
+            double denominator = -0.2351 * Math.Pow(0.8946, exp) * Math.Pow(exp, -0.2876) + 0.9947;
+            return LD / denominator;
         }
 
-        private static double getLD()
+        private static double getLD(bool mt, bool gcsf)
         {
-            throw new NotImplementedException();
+            if (mt == false)
+                return 4.5;
+            else
+            {
+                if (gcsf == true)
+                    return 8.5;
+                else
+                    return 6.8;
+            }
+
         }
         #endregion
 
         #region InjuryProfile
-        
+
         private static void InitInjuryProfile()
         {
             // time in minutes
@@ -456,12 +477,131 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
 
         #endregion
 
+        #region Icon State
+        private static List<string> GetStateCut(int range)
+        {
+            List<string> result = new List<string>();
+            if (range == 1)
+                return new List<string> { "WIA", "RTD", "3", "100" };
+            if (range == 2)
+                return new List<string> { "WIA", "RTD", "3", "100" };
+            if (range == 3)
+                return new List<string> { "WIA", "CONV", "3", "100" };
+            if (range == 4)
+                return new List<string> { "WIA", "CONV", "3", "100" };
+            else
+                return new List<string> { "None" };
+        }
+
+        private static List<string> GetStateWB(int range)
+        {
+            List<string> result = new List<string>();
+            if (range == 1)
+                return new List<string> { "WIA", "CONV", "2", "100" };
+            else
+                return new List<string> { "WIA", "CONV", "30", "100" };
+        }
+
+        private static void InterpretState(List<string> wbstate, List<string> cutstate, Icon icon)
+        {
+            bool wb = true, cut = true;
+            if (wbstate.Contains("None"))
+                wb = false;
+            if (cutstate.Contains("None"))
+                cut = false;
+            if (cut == false && wb == false)
+                return;
+
+            RadChallengeProperties.newWIA[0] += Convert.ToInt32(icon.Personnel);
+
+            if (wb == false)
+            {
+                if (cutstate.Contains("CONV"))
+                {
+                    RadChallengeProperties.newCONV[2] += Convert.ToInt32(icon.Personnel);
+                    return;
+                }
+                else
+                {
+                    RadChallengeProperties.newRTD[2] += Convert.ToInt32(icon.Personnel);
+                    return;
+                }
+            }
+
+            if(cut == false)
+            {
+                if(wbstate[2].Equals("2"))
+                {
+                    RadChallengeProperties.newCONV[1] += Convert.ToInt32(icon.Personnel);
+                    return;
+                }
+                else
+                {
+                    double TimeToDeath = 0;
+                    double deathdose = CalculateDeathDose();
+                    if (RadEffChallenge.DoseWholeBody > deathdose)
+                    {
+                        if (RadEffChallenge.DoseWholeBody < 100)
+                            TimeToDeath = 429 * Math.Pow(RadEffChallenge.DoseWholeBody, -1.3);                
+                        else
+                            TimeToDeath = 2;
+                        RadChallengeProperties.newDOW[ConvertToTable(Convert.ToInt32(TimeToDeath))] = Convert.ToInt32(icon.Personnel);
+                        return;
+                    }
+                    else
+                    {
+                        RadChallengeProperties.newCONV[8] = Convert.ToInt32(icon.Personnel);
+                        return;
+                    }
+                    
+                }
+
+            }
+
+            if(cutstate.Contains("RTD"))
+            {
+                RadChallengeProperties.newCONV[ConvertToTable(Convert.ToInt32(wbstate[2]))] = Convert.ToInt32(icon.Personnel);
+                return;
+            }
+            else
+            {
+                int day = Math.Max(Convert.ToInt32(cutstate[2]),Convert.ToInt32(wbstate[2]));
+                RadChallengeProperties.newCONV[ConvertToTable(day)] = Convert.ToInt32(icon.Personnel);
+                return;
+            }
+
+        }
+
+        private static void CompletTable()
+        {
+            for(int i = 1; i < RadChallengeProperties.newCONV.Count(); i++)
+            {
+                OutputTable.Rows[0].SetField(i, Convert.ToInt32(OutputTable.Rows[0].ItemArray[i]) + RadChallengeProperties.newKIA[i - 1]);
+                OutputTable.Rows[1].SetField(i, Convert.ToInt32(OutputTable.Rows[1].ItemArray[i]) + RadChallengeProperties.newDOW[i - 1]);
+                OutputTable.Rows[2].SetField(i, Convert.ToInt32(OutputTable.Rows[2].ItemArray[i]) + RadChallengeProperties.newKIA[i - 1] + RadChallengeProperties.newDOW[i - 1]);
+                OutputTable.Rows[3].SetField(i, Convert.ToInt32(OutputTable.Rows[3].ItemArray[i]) + RadChallengeProperties.newWIA[i - 1]);
+                OutputTable.Rows[4].SetField(i, Convert.ToInt32(OutputTable.Rows[4].ItemArray[i]) + RadChallengeProperties.newCONV[i - 1]);
+                OutputTable.Rows[5].SetField(i, Convert.ToInt32(OutputTable.Rows[5].ItemArray[i]) + RadChallengeProperties.newRTD[i - 1]);
+            }
+        }
+
+        private static int ConvertToTable(int day)
+        {
+            if (day > 7 && day < 15)
+                return 7;
+            if (day > 14 && day < 31)
+                return 8;
+            if (day > 30)
+                return 9;
+            else return day;
+        }
+        #endregion
+
         #region Output
         private static void CreateTables()
         {
             List<string> tableDetails = new List<string>
-                { "New KIA (N)", "New DOW (CRN)", "Sum of New Fatalities", "New WIA (Nuclear)", "New CONV (Nuclear)", "New RTD",
-                    "Sum of Fatalities", "Sum of WIA", "Sum of Conv", "RTD"};
+                { "New KIA (N)", "New DOW (CRN)", "Sum of New Fatalities", "New WIA (Nuclear)", "New CONV (Nuclear)", "New RTD"};
 
             OutputTable = InitTable(tableDetails);
 
@@ -517,8 +657,9 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
         {
             DataRow row = table.NewRow();
             row[0] = colName;
-            for (int i = 0; i < 11; i++)
+            for (int i = 1; i < 11; i++)
                 row[i] = 0;
+            table.Rows.Add(row);
         }
 
         #endregion

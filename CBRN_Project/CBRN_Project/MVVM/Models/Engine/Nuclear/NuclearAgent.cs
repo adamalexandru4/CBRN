@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CBRN_Project.MVVM.Models.Engine.Radiological.
 
 namespace CBRN_Project.MVVM.Models.Engine.Nuclear
 {
-    class NuclearAgent
+    static class NuclearAgent
     {
+
         #region Properties
         //Nuclear Properties 
-        private static NuclearProperties NucProperties { get; set; }
+        private static NuclearProperties NucProperties = new NuclearProperties();
 
         //Tables
-        private static DataTable OutputTable { get; set; }
+        private static DataTable OutputTable = new DataTable();
 
+        
 
         #endregion
 
@@ -51,6 +50,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
             List <string> wiaThermal = CalculateThermalWIA(NucProperties.RangeTh);
 
             InterpretState(wiaWb, wiaBlast, wiaThermal, icon);
+            CompletTable();
         }
 
         public static void GenerateOutputTable()
@@ -66,8 +66,13 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
       
         private static double CalculateThermalChallenge(Icon icon, double value)
         {
-            double result = Math.Acos(310 / value) / Math.PI * 0.88 
-                            + Math.Acos(109/ value) / Math.PI * 0.12;
+            double result = 0;
+            var val1 = (Math.Acos(310 / value) / Math.PI) * 0.85;
+            var val2 = (Math.Acos(109 / value) / Math.PI) * value / Math.PI;
+            if (val1 > 0)
+                result += val1;
+            if (val2 > 0)
+                result += val2;
             return result;
         } 
 
@@ -86,7 +91,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
         {
             NucProperties.RangeTh = CalculateThermalRange(NucProperties.NucThermal);
             NucProperties.RangeWB = CalculateWBRange(NucProperties.NucWholeBody);
-            NucProperties.RangeBl = CalculateBlastRange(NucProperties.RangeBl);
+            NucProperties.RangeBl = CalculateBlastRange(NucProperties.NucBlast);
         }
 
         private static int CalculateBlastRange(double dose)
@@ -208,9 +213,9 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
 
         private static double CalculateThermalChallengedPersonsNumber(Icon icon) // Need vehicle shelter protection factor
         {
-            double result = icon.Personnel;
-            //double fraction = icon.Vehicle_Shelter.BlastProtection.ProtectionFactor;
-            return result;
+            // Need vehicle shelter protection factor
+            //icon vehicle shelter protection ....
+            return 0.80;
         }
 
         private static void InterpretState(List<string> wbstat, List<string> blstat, List<string> thstat, Icon icon)
@@ -229,16 +234,10 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
             if (Th == true)
                 procent = CalculateThermalChallengedPersonsNumber(icon);
 
-            List<int> newDOW = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            List<int> newWIA = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            List<int> newCONV = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            List<int> newRTD = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            List<int> newKIA = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
             //need of yield, default 10 KT
             if (NucProperties.NucBlast > getThresholdBlast(10)) 
             {
-                newKIA[0] += Convert.ToInt32(icon.Personnel);
+                NucProperties.newKIA[0] += Convert.ToInt32(icon.Personnel);
                 return;
             }
 
@@ -247,74 +246,78 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
                 double time = 429 * Math.Pow(NucProperties.NucWholeBody, -1.3);
                 int day = Convert.ToInt32(Math.Round(time));
                 if (day > 1)
-                    newWIA[0] += (int)icon.Personnel;
-                newDOW[ConvertToTable(day)] += (int)icon.Personnel;
+                    NucProperties.newWIA[0] += (int)icon.Personnel;
+                NucProperties.newDOW[ConvertToTable(day)] += (int)icon.Personnel;
                 return;
             }
             else
             {
-                newWIA[0] += (int)icon.Personnel;
-                if(thstat[1] == "DOW")
+                NucProperties.newWIA[0] += (int)icon.Personnel;
+                if(thstat[0] != "None" && thstat[1] == "DOW")
                 {
                     int day = ConvertToTable(Convert.ToInt32(thstat[2]));
-                    newDOW[day] += Convert.ToInt32(icon.Personnel * procent * Convert.ToInt32(thstat[3]) /100);
-                    newCONV[8] += Convert.ToInt32(icon.Personnel * procent * Convert.ToInt32(thstat[6]) / 100);
+                    NucProperties.newDOW[day] += Convert.ToInt32(icon.Personnel * procent * Convert.ToInt32(thstat[3]) /100);
+                    NucProperties.newCONV[8] += Convert.ToInt32(icon.Personnel * procent * Convert.ToInt32(thstat[6]) / 100);
                     return;
                 }
 
-                if(blstat[1] == "DOW")
+                if(blstat[0] != "None" && blstat[1] == "DOW")
                 {
-                    newWIA[0] += (int)icon.Personnel;
-                    newDOW[2] += (int)(icon.Personnel * 0.23);
-                    newCONV[9] += (int)(icon.Personnel * 0.77);
+                    NucProperties.newWIA[0] += (int)icon.Personnel;
+                    NucProperties.newDOW[2] += (int)(icon.Personnel * 0.23);
+                    NucProperties.newCONV[9] += (int)(icon.Personnel * 0.77);
                     return;
                 }
 
-                if(wbstat[1] == "CONV" || thstat[1] == "CONV" )
+                if(wbstat[0] != "None" && thstat[0] != "None" && (wbstat[1] == "CONV" ||  thstat[1] == "CONV") )
                 {
                     int day = Math.Max(Convert.ToInt32(wbstat[2]),Convert.ToInt32(thstat[2]));
-                    newCONV[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
+                    NucProperties.newCONV[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
                     return;
                 }
 
-                if(thstat[1] == "RTD" && blstat[1] == "RTD")
+                if((thstat[0] != "None" && blstat[0] != "None")&&(thstat[1] == "RTD" && blstat[1] == "RTD"))
                 {
                     int day = Math.Max(Convert.ToInt32(thstat[2]), Convert.ToInt32(blstat[2]));
-                    newRTD[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
+                    NucProperties.newRTD[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
                     return;
                 }
 
-                if (thstat[1] == "RTD")
+                if (thstat[0] != "None" && thstat[1] == "RTD")
                 {
                     int day = Convert.ToInt32(thstat[2]);
-                    newRTD[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
+                    NucProperties.newRTD[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
                     return;
                 }
 
-                if (blstat[1] == "RTD")
+                if (thstat[0] != "None" && blstat[1] == "RTD")
                 {
                     int day = Convert.ToInt32(blstat[2]);
-                    newRTD[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
+                    NucProperties.newRTD[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
+                    return;
+                }
+                else
+                {
+                    int day = 7;
+                    NucProperties.newRTD[ConvertToTable(day)] += Convert.ToInt32(icon.Personnel);
                     return;
                 }
             }
-            CompletTable(newKIA, newDOW, newWIA, newCONV, newRTD);
+
+            
         }
 
-        private static void CompletTable(List<int> newKIA, List<int> newDOW, List<int> newWIA, List<int> newCONV, List<int> newRTD )
+        private static void CompletTable()
         {
-            for(int i = 1; i <= newKIA.Count(); i++)
+            for(int i = 1; i <= NucProperties.newKIA.Count(); i++)
             {
-                OutputTable.Rows[0].SetField(i, Convert.ToInt32(OutputTable.Rows[0].ItemArray[i]) + newKIA[i-1]);
-                OutputTable.Rows[1].SetField(i, Convert.ToInt32(OutputTable.Rows[1].ItemArray[i]) + newDOW[i-1]);
-                OutputTable.Rows[2].SetField(i, Convert.ToInt32(OutputTable.Rows[2].ItemArray[i]) + newKIA[i-1] + newDOW[i-1]);
-                OutputTable.Rows[3].SetField(i, Convert.ToInt32(OutputTable.Rows[3].ItemArray[i]) + newWIA[i-1]);
-                OutputTable.Rows[4].SetField(i, Convert.ToInt32(OutputTable.Rows[4].ItemArray[i]) + newCONV[i-1]);
-                OutputTable.Rows[5].SetField(i, Convert.ToInt32(OutputTable.Rows[5].ItemArray[i]) + newRTD[i-1]);
-                //OutputTable.Rows[6].SetField(i, Convert.ToInt32(OutputTable.Rows[6].ItemArray[i]) + newKIA[i]);
-                //OutputTable.Rows[7].SetField(i, Convert.ToInt32(OutputTable.Rows[7].ItemArray[i]) + newKIA[i]);
-                //OutputTable.Rows[8].SetField(i, Convert.ToInt32(OutputTable.Rows[8].ItemArray[i]) + newKIA[i]);
-                //OutputTable.Rows[9].SetField(i, Convert.ToInt32(OutputTable.Rows[9].ItemArray[i]) + newKIA[i]);
+                OutputTable.Rows[0].SetField(i, Convert.ToInt32(OutputTable.Rows[0].ItemArray[i]) + NucProperties.newKIA[i-1]);
+                OutputTable.Rows[1].SetField(i, Convert.ToInt32(OutputTable.Rows[1].ItemArray[i]) + NucProperties.newDOW[i-1]);
+                OutputTable.Rows[2].SetField(i, Convert.ToInt32(OutputTable.Rows[2].ItemArray[i]) + NucProperties.newKIA[i-1] + NucProperties.newDOW[i-1]);
+                OutputTable.Rows[3].SetField(i, Convert.ToInt32(OutputTable.Rows[3].ItemArray[i]) + NucProperties.newWIA[i-1]);
+                OutputTable.Rows[4].SetField(i, Convert.ToInt32(OutputTable.Rows[4].ItemArray[i]) + NucProperties.newCONV[i-1]);
+                OutputTable.Rows[5].SetField(i, Convert.ToInt32(OutputTable.Rows[5].ItemArray[i]) + NucProperties.newRTD[i-1]);
+                
             }
         }
 
@@ -346,7 +349,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
         {
             List<string> dailyDetails = new List<string>
                 { "New KIA (N)", "New DOW (CRN)", "Sum of New Fatalities", "New WIA (Nuclear)", "New CONV (Nuclear)", "New RTD" };
-                    //"Sum of Fatalities", "Sum of WIA", "Sum of Conv", "Sum of RTD"};
+                    
             OutputTable = Radiological.RadiologicalAgent.InitTable(dailyDetails);
         }
         #endregion

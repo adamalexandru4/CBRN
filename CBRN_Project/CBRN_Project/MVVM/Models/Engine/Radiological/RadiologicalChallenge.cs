@@ -11,7 +11,6 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
         public double DoseWholeBody     { get; set; }
         public double DoseCoutanous     { get; set; }
         public List<string> Izotop      { get; set; }
-        public double DeathDose         { get; set; }
         public string Description       { get; set; }
 
 

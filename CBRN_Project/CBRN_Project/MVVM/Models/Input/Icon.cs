@@ -31,6 +31,7 @@ namespace CBRN_Project.MVVM.Models
 
             ID = iconId;
             Name = "Icon " + ID.ToString();
+
         }
 
         #endregion

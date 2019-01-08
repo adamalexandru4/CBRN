@@ -43,8 +43,9 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
                 }
             }
         }
-
+        #region RDD Properties
         //RDD Properties
+        public List<string> Izotop                             { get; set; }
         // Whole-Body factors 
         public double WholeBodyInhalation               { get; set; }
         public double WholeBodyCloudShine               { get; set; }
@@ -54,13 +55,39 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
         public double CutaneousSkin                     { get; set; }
         public double CutaneousCloudShine               { get; set; }
         public double CutaneousGroundShine              { get; set; }
+        #endregion
+
+        #region Fallout Properties
         //Fallout Properties
         public double WholeBodyGroundshineFallout       { get; set; }
         public double CutaneousSkinFallout              { get; set; }
 
+        //State for Icons
+        public List<int> newDOW;
+        public List<int> newWIA;
+        public List<int> newCONV;
+        public List<int> newRTD;
+        public List<int> newKIA;
+
+        #endregion
+
         #endregion
 
         #region Methods
+        public RadiologicalProperties()
+        {
+            SetLists();
+        }
+
+        private void SetLists()
+        {
+            newDOW = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            newWIA = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            newCONV = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            newRTD = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            newKIA = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        }
+
         public double GetWholeBodyDose()
         {
             return WholeBodyCloudShine + WholeBodyCloudShine + WholeBodyInhalation;
@@ -69,6 +96,20 @@ namespace CBRN_Project.MVVM.Models.Engine.Radiological
         public double GetCutaneousDose()
         {
             return CutaneousCloudShine + CutaneousGroundShine + CutaneousSkin;
+        }
+
+        public void ResetValue()
+        {
+            this.challengeType = TypeOfRadChallenge.None;
+            this.CutaneousCloudShine = 0;
+            this.CutaneousGroundShine = 0;
+            this.CutaneousSkin = 0;
+            this.CutaneousSkinFallout = 0;
+            this.Izotop = null;
+            this.WholeBodyCloudShine = 0;
+            this.WholeBodyGroundshine = 0;
+            this.WholeBodyGroundshineFallout = 0;
+            this.WholeBodyInhalation = 0;
         }
         #endregion
 

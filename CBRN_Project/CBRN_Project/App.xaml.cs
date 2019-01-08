@@ -1,4 +1,7 @@
-﻿using CBRN_Project.MVVM.ViewModels;
+﻿using CBRN_Project.MVVM.Models;
+using CBRN_Project.MVVM.Models.Engine.Nuclear;
+using CBRN_Project.MVVM.Models.Engine.Radiological;
+using CBRN_Project.MVVM.ViewModels;
 using CBRN_Project.MVVM.Views;
 using CBRN_Project.Utility;
 using System;
@@ -40,6 +43,7 @@ namespace CBRN_Project
 
 
             MainWindow.Show();
+
            // MainWindow.MainFrame.Navigated += mainViewModel.ClearFrameCache;
         }
     }

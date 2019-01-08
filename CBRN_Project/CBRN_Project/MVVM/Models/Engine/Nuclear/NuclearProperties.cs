@@ -27,8 +27,31 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
         public double UniformThermal        { get; set; }
 
         //Ranges
-        public int RangeBl           { get; set; }
-        public int RangeWB           { get; set; }
-        public int RangeTh           { get; set; }
+        public int RangeBl                  { get; set; }
+        public int RangeWB                  { get; set; }
+        public int RangeTh                  { get; set; }
+
+        //State for Icons
+        public List<int> newDOW ;
+        public List<int> newWIA ;
+        public List<int> newCONV;
+        public List<int> newRTD ;
+        public List<int> newKIA ;
+
+        #region Methods
+        public NuclearProperties()
+        {
+            SetLists();
+        }
+
+        void SetLists()
+        {
+            newDOW = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            newWIA = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            newCONV = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            newRTD = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            newKIA = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        }
+        #endregion
     }
 }
