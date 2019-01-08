@@ -1,4 +1,5 @@
 ﻿using CBRN_Project.Utility;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace CBRN_Project.MVVM.Views
     /// <summary>
     /// Interaction logic for DialogWindow.xaml
     /// </summary>
-    public partial class DialogWindow : Window, IDialog
+    public partial class DialogWindow : MetroWindow, IDialog
     {
         public DialogWindow()
         {

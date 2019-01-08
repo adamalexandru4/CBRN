@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace CBRN_Project.MVVM.ViewModels
 {
-    public abstract class WorkspaceViewModel : ViewModelBase
+    public class WorkspaceViewModel : ViewModelBase
     {
         #region Fields
 
@@ -18,7 +18,7 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Constructor
 
-        protected WorkspaceViewModel()
+        public WorkspaceViewModel()
         {
         }
 
