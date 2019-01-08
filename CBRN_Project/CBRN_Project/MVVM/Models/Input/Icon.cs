@@ -8,16 +8,17 @@ namespace CBRN_Project.MVVM.Models
 
         public string Name                                      { get; set; }
         public int ID                                           { get; set; }
-        public float Personnel                                  { get; set; }
+        public double Personnel                                 { get; set; }
         
         public BreathingRate BreathingRate                      { get; set; }
-        public float BodySurfaceArea                            { get; set; } = (float)0.9;
+        public double BodySurfaceArea                           { get; set; } = 0.9;
         public ProtFactors IPE                                  { get; set; }
         public VehicleShelter Vehicle_Shelter                   { get; set; }
         public Prophylaxis Prophylaxis                          { get; set; }
         public Uniform Uniform                                  { get; set; }
 
         public List<Challenge> Challenges                       { get; set; }
+        public List<EffChallenge> EffChallenges                 { get; set; }
 
         #endregion
 
@@ -28,6 +29,7 @@ namespace CBRN_Project.MVVM.Models
             Vehicle_Shelter = new VehicleShelter();
             Prophylaxis = new Prophylaxis();
             Uniform = new Uniform();
+            EffChallenges = new List<EffChallenge>();
 
             ID = iconId;
             Name = "Icon " + ID.ToString();

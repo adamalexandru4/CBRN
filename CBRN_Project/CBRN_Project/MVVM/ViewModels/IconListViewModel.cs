@@ -11,6 +11,18 @@ using System.Windows.Controls;
 
 namespace CBRN_Project.MVVM.ViewModels
 {
+    public class IconDisplay
+    {
+        public string  Name { get; set; }
+        public int     Id { get; set; }
+
+        public IconDisplay (Icon icon)
+        {
+            Name = icon.Name;
+            Id = icon.ID;
+        }
+    }
+
     public class IconListViewModel : ViewModelBase
     {
         #region Fields
@@ -30,6 +42,18 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #endregion 
 
+        public List<Icon> GetIconList()
+        {
+            List<Icon> list = new List<Icon>();
+
+            foreach(var elem in IconsList)
+            {
+                list.Add(elem);
+            }
+
+            return list;
+        }
+
         public IconListViewModel(IconRepository newIconRepository)
         {
             IconsList = new ObservableCollection<Icon>();
@@ -45,7 +69,9 @@ namespace CBRN_Project.MVVM.ViewModels
 
         void OnIconAddedToRepository(object sender, IconAddedEventArgs e)
         {
-            var icon = new Icon(IconRepository.IconId);
+            Icon icon = new Icon(IconRepository.IconId);
+            IconDisplay iconDisplay = new IconDisplay(icon);
+            
             IconsList.Add(icon);
             
             this.OnPropertyChanged("TotalIcons");
@@ -61,15 +87,5 @@ namespace CBRN_Project.MVVM.ViewModels
                 this.OnPropertyChanged("TotalIcons");
             }
         }
-
-        /*public void OnIconRemovedFromRepository(object sender, IconRemovedEventArgs e)
-        {
-            if (SelectedIcon != null)
-            {
-                IconsList.Remove(SelectedIcon);
-                
-                this.OnPropertyChanged("TotalIcons");
-            }
-        }*/
     }
 }

@@ -35,10 +35,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net46\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -57,13 +74,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data Access\DataService.cs" />
     <Compile Include="Data Access\IconAddedEventArgs.cs" />
     <Compile Include="Data Access\IconRemovedEventArgs.cs" />
     <Compile Include="Data Access\IconRepository.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\ChemModel.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\ReportUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\CIPsUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\CohortsUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\ChemExIcon.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\PbtiesUnit.cs" />
+    <Compile Include="MVVM\Models\Chemical Model\Functional Units\PopsUnit.cs" />
     <Compile Include="MVVM\Models\Input\BreathingRate.cs" />
     <Compile Include="MVVM\Models\Input\Challenge.cs" />
     <Compile Include="MVVM\Models\Input\EffChallenge.cs" />
     <Compile Include="MVVM\Models\Input\Icon.cs" />
+    <Compile Include="MVVM\Models\Input\MethParams.cs" />
     <Compile Include="MVVM\Models\Input\ProtFactors.cs" />
     <Compile Include="MVVM\Models\Input\Uniform.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\BlastShieldingProtection.cs" />
@@ -71,38 +97,59 @@
     <Compile Include="MVVM\Models\Input\Prophylaxis.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\RadiationClass.cs" />
     <Compile Include="MVVM\Models\Input\Vehicle Shelter\VehicleShelter.cs" />
+    <Compile Include="MVVM\Models\Output\DailyReport.cs" />
+    <Compile Include="MVVM\ViewModels\ApplicationViewModel.cs" />
     <Compile Include="MVVM\ViewModels\CommandViewModel.cs" />
-    <Compile Include="MVVM\ViewModels\CreateIconViewModel.cs" />
+    <Compile Include="MVVM\ViewModels\Create Icon\CreateIconInput2ViewModel.cs" />
+    <Compile Include="MVVM\ViewModels\Create Icon\CreateIconInput1ViewModel.cs" />
+    <Compile Include="MVVM\ViewModels\DailyReportViewModel.cs" />
     <Compile Include="MVVM\ViewModels\IPEDialogViewModel.cs" />
     <Compile Include="MVVM\ViewModels\IconListViewModel.cs" />
     <Compile Include="MVVM\ViewModels\MainWindowViewModel.cs" />
     <Compile Include="MVVM\ViewModels\EditViewModel.cs" />
+    <Compile Include="MVVM\ViewModels\MethParamsViewModel.cs" />
+    <Compile Include="MVVM\ViewModels\StartViewModel.cs" />
     <Compile Include="MVVM\ViewModels\VehicleShelterDialogViewModel.cs" />
     <Compile Include="MVVM\ViewModels\ViewModelBase.cs" />
     <Compile Include="MVVM\ViewModels\WorkspaceViewModel.cs" />
-    <Compile Include="MVVM\Views\CreateIconView.xaml.cs">
-      <DependentUpon>CreateIconView.xaml</DependentUpon>
+    <Compile Include="MVVM\Views\Create Icon\CreateIconInput2View.xaml.cs">
+      <DependentUpon>CreateIconInput2View.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\Views\IPEDialogWindow.xaml.cs">
+    <Compile Include="MVVM\Views\Create Icon\CreateIconInput1View.xaml.cs">
+      <DependentUpon>CreateIconInput1View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\Views\DailyReportView.xaml.cs">
+      <DependentUpon>DailyReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\Views\Dialogs\IPEDialogWindow.xaml.cs">
       <DependentUpon>IPEDialogWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\Views\EditView.xaml.cs">
+    <Compile Include="MVVM\Views\Edit Icon\EditView.xaml.cs">
       <DependentUpon>EditView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\Views\IconsListView.xaml.cs">
+    <Compile Include="MVVM\Views\Icon List\IconsListView.xaml.cs">
       <DependentUpon>IconsListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Views\InputView.xaml.cs">
       <DependentUpon>InputView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\Views\VehicleShelterDialogWindow.xaml.cs">
+    <Compile Include="MVVM\Views\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\Views\MethParamsView.xaml.cs">
+      <DependentUpon>MethParamsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\Views\StartView.xaml.cs">
+      <DependentUpon>StartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\Views\Dialogs\VehicleShelterDialogWindow.xaml.cs">
       <DependentUpon>VehicleShelterDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility\IDialog.cs" />
     <Compile Include="Utility\ObservableDictionary.cs" />
     <Compile Include="Utility\ObservableObject.cs" />
     <Compile Include="Utility\RelayCommand.cs" />
-    <Compile Include="Utility\StringToFloatConverter.cs" />
+    <Compile Include="Utility\StringToDoubleConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -119,19 +166,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\Views\CreateIconView.xaml">
+    <Page Include="MVVM\Views\Create Icon\CreateIconInput2View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\Views\Create Icon\CreateIconInput1View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\Views\IPEDialogWindow.xaml">
+    <Page Include="MVVM\Views\DailyReportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\Views\EditView.xaml">
+    <Page Include="MVVM\Views\Dialogs\IPEDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\Views\IconsListView.xaml">
+    <Page Include="MVVM\Views\Edit Icon\EditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\Views\Icon List\IconsListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,7 +194,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\Views\VehicleShelterDialogWindow.xaml">
+    <Page Include="MVVM\Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\Views\MethParamsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\Views\StartView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\Views\Dialogs\VehicleShelterDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\CreateIconViewResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\StartWindowResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -162,6 +237,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -170,7 +246,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Images\logo.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\add-icon.png" />
     <Resource Include="Resources\Images\edit-icon.png" />

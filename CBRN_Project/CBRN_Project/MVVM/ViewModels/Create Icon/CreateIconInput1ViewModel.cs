@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace CBRN_Project.MVVM.ViewModels
 {
-    public class CreateIconViewModel : WorkspaceViewModel
+    public class CreateIconInput1ViewModel : ViewModelBase
     {
         #region Fields
 
@@ -30,13 +30,14 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Constructor
 
-        public CreateIconViewModel(Icon newIcon, IconRepository newIconRepository, IDialogService dialogService)
+        public CreateIconInput1ViewModel(Icon newIcon, IconRepository newIconRepository, 
+                                        IDialogService dialogService)
         {
             icon = newIcon ?? throw new ArgumentNullException("icon");
             iconRepository = newIconRepository ?? throw new ArgumentNullException("iconrepository");
             this.dialogService = dialogService;
 
-            this.DisplayName = "Create Icon";
+            this.DisplayName = "New icon";
 
             CreateBreathingRateValues();
             CreateIpeClasses();
@@ -47,7 +48,7 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Icon Properties
 
-        public float Personnel
+        public double Personnel
         {
             get { return icon.Personnel; }
             set
@@ -61,7 +62,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BodySurfaceArea
+        public double BodySurfaceArea
         {
             get
             {
@@ -131,7 +132,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BreathingRateChemAg
+        public double BreathingRateChemAg
         {
             get
             {
@@ -148,7 +149,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BreathingRateBioAg
+        public double BreathingRateBioAg
         {
             get
             {
@@ -329,7 +330,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float NeutronRadiation
+        public double NeutronRadiation
         {
             get
             {
@@ -342,7 +343,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float GammaRadiation
+        public double GammaRadiation
         {
             get
             {
@@ -355,7 +356,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BlastShielding
+        public double BlastShielding
         {
             get
             {
@@ -368,7 +369,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float Prophylaxis
+        public double Prophylaxis
         {
             get
             {
@@ -450,7 +451,11 @@ namespace CBRN_Project.MVVM.ViewModels
             if (this.IsNewIcon)
                 iconRepository.AddIcon(icon);
 
-            MainWindowViewModel.Instance.CloseWorkspace();
+            if(MainWindowViewModel.Instance.IconsList.IconsList.Count > 0)
+                MainWindowViewModel.Instance.MethParamsWorkspace.NewTabVisibility = true;
+
+            MainWindowViewModel.Instance.Workspace = MainWindowViewModel.Instance.MethParamsWorkspace;
+
 
             base.OnPropertyChanged("DisplayName");
         }

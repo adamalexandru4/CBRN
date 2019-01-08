@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace CBRN_Project.MVVM.ViewModels
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
+    public class ViewModelBase : INotifyPropertyChanged, IDisposable
     {
         #region Constructor
 
