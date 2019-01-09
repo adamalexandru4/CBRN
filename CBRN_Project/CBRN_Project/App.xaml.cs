@@ -1,4 +1,7 @@
-﻿using CBRN_Project.Data_Access;
+using CBRN_Project.MVVM.Models;
+using CBRN_Project.MVVM.Models.Engine.Nuclear;
+using CBRN_Project.MVVM.Models.Engine.Radiological;
+using CBRN_Project.Data_Access;
 using CBRN_Project.MVVM.ViewModels;
 using CBRN_Project.MVVM.Views;
 using CBRN_Project.Utility;
@@ -40,6 +43,7 @@ namespace CBRN_Project
 
             MainWindow.DataContext = mainViewModel;
             MainWindow.Show();
+
         }
     }
 }

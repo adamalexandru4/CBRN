@@ -19,7 +19,7 @@ namespace CBRN_Project.MVVM.Models
 
         public List<Challenge> Challenges                       { get; set; }
         public List<EffChallenge> EffChallenges                 { get; set; }
-
+      
         #endregion
 
         #region Constructors
@@ -35,6 +35,7 @@ namespace CBRN_Project.MVVM.Models
 
             ID = iconId;
             Name = "Icon " + ID.ToString();
+
         }
 
         #endregion
