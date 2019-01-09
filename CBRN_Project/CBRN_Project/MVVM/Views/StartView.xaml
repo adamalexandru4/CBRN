@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="CBRN_Project.MVVM.Views.StartView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CBRN_Project.MVVM.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <ResourceDictionary Source="/Resources/StartWindowResources.xaml"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Image Source="/Resources/Images/logo.png" Grid.ColumnSpan="2"/>
+        
+        <Grid Grid.Row="1" Visibility="{Binding InputSchemeVisibility, 
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        Converter={StaticResource BooleanToVisibility}}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                Width="250" Height="75"
+                Content="Input scheme 1"
+                TextBlock.FontSize="25"
+                Command="{Binding SelectInputScheme1Command}"/>
+            <Button Grid.Column="1"
+                Width="250" Height="75"
+                Content="Input scheme 2"
+                TextBlock.FontSize="25"
+                Command="{Binding SelectInputScheme2Command}"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Visibility="{Binding FirstSelectionVisibility, 
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged,    
+                                        Converter={StaticResource BooleanToVisibility}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" 
+                     Margin="100 30 10 30"
+                     ItemsSource="{Binding TypesOfChallenges}" 
+                     SelectedItem="{Binding TypeOfChallengeSelected, Mode=TwoWay}"/>
+            <ComboBox Grid.Column="1"
+                      Visibility="{Binding AgentsTypesVisibility,
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource BooleanToVisibility}}"
+                      ItemsSource="{Binding AgentsTypesForChallenge}"
+                      SelectedItem="{Binding AgentSelected, Mode=TwoWay}"
+                      Margin="100 30 40 30"/>
+            <Button Grid.Column="2"
+                    Margin="70 25 100 25"
+                    Content="Next"
+                    Visibility="{Binding NextButtonVisibility, 
+                                Mode=TwoWay, 
+                                UpdateSourceTrigger=PropertyChanged,
+                                Converter={StaticResource BooleanToVisibility}}"
+                    Command="{Binding NextCommand}"/>
+        </Grid>
+    </Grid>
+</UserControl>

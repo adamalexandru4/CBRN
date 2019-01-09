@@ -8,7 +8,7 @@ namespace CBRN_Project.MVVM.Models
 {
     public class Uniform
     {
-        public float thresoldThermalFluence { get; set; }
+        private double thresoldThermalFluence { get; set; }
 
         private string uniformType { get; set; }
         public string UniformType

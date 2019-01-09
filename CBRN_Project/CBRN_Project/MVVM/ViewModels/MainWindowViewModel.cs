@@ -21,24 +21,47 @@ namespace CBRN_Project.MVVM.ViewModels
         #region Fields
 
         public static MainWindowViewModel           Instance = null;
-        readonly IconRepository                     iconRepository;
-        IconListViewModel                           iconsList;
-        ObservableCollection<WorkspaceViewModel>    workspaces;
+        public readonly IconRepository              iconRepository;
+        public static DataService                   dataServiceInstance = null;
+        public static MethParams                    methParamsInstance = null;
 
+        IconListViewModel                           iconsList;
+        //ObservableCollection<WorkspaceViewModel>  workspaces;
+
+        ViewModelBase                               workspace;
+        MethParamsViewModel                         methParamsWorkspace;
+
+        public int                                  inputScheme;
         IDialogService                              dialogService;
+
+        public string                               typeOfChallenge;
+        public string                               agent;
 
         #endregion
 
         #region Constructor
 
-        public MainWindowViewModel(IDialogService dialogService)
+        public MainWindowViewModel(IDialogService dialogService, int inputScheme, string typeOfChallenge = null, string agent = null)
         {
             if (Instance == null)
                 Instance = this;
 
-            this.dialogService = dialogService;
-            base.DisplayName = "MainWindow";
-            iconRepository = new IconRepository();
+            if (methParamsInstance == null)
+                methParamsInstance = new MethParams();
+
+            if (dataServiceInstance == null)
+                dataServiceInstance = new DataService();
+
+            MethParamsWorkspace = new MethParamsViewModel();
+            Workspace           = MethParamsWorkspace;
+
+            this.typeOfChallenge = typeOfChallenge;
+            this.agent = agent;
+
+            this.inputScheme    = inputScheme;
+            this.dialogService  = dialogService;
+            base.DisplayName    = "MainWindow";
+            iconRepository      = new IconRepository();
         }
 
         #endregion
@@ -61,7 +84,26 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Workspaces
 
-        public ObservableCollection<WorkspaceViewModel> Workspaces
+        public MethParamsViewModel MethParamsWorkspace
+        {
+            set
+            {
+                methParamsWorkspace = value;
+                OnPropertyChanged("MethParamsWorkspace");
+            }
+            get
+            {
+                if(methParamsWorkspace == null)
+                {
+                    methParamsWorkspace = MethParamsViewModel.Instance;
+                    OnPropertyChanged("MethParamsWorkspace");
+                }
+
+                return methParamsWorkspace;
+            }
+        }
+
+       /* public ObservableCollection<WorkspaceViewModel> Workspaces
         {
             get
             {
@@ -73,8 +115,26 @@ namespace CBRN_Project.MVVM.ViewModels
 
                 return workspaces;
             }
-        }
+        }*/
 
+        public ViewModelBase Workspace
+        {
+            set
+            {
+                workspace = value;
+                OnPropertyChanged("Workspace");
+            }
+            get
+            {
+                if(workspace == null)
+                {
+                    workspace = new WorkspaceViewModel();
+                    OnPropertyChanged("Workspace");
+                }
+                return workspace;
+            }
+        }
+        /*
         void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null && e.NewItems.Count != 0)
@@ -84,6 +144,7 @@ namespace CBRN_Project.MVVM.ViewModels
             if (e.OldItems != null && e.OldItems.Count != 0)
                 foreach (WorkspaceViewModel workspace in e.OldItems)
                     workspace.RequestClose -= this.OnWorkspaceRequestClose;
+
         }
 
         void OnWorkspaceRequestClose(object sender, EventArgs e)
@@ -91,7 +152,10 @@ namespace CBRN_Project.MVVM.ViewModels
             WorkspaceViewModel workspace = sender as WorkspaceViewModel;
             workspace.Dispose();
             this.Workspaces.Remove(workspace);
-        }
+
+            if (iconsList.TotalIcons > 0 && workspaces.Count == 0)
+                NewTabVisibility = true;
+        }*/
 
         #endregion
 
@@ -115,13 +179,34 @@ namespace CBRN_Project.MVVM.ViewModels
         }
 
         void CreateNewIcon()
-        {            
-            Icon newIcon = Icon.CreateNewIcon(IconRepository.IconId);
-            CreateIconViewModel workspace = new CreateIconViewModel(newIcon, iconRepository, dialogService);
-            this.Workspaces.Add(workspace);
-            this.SetActiveWorkspace(workspace);
-        }
+        {
+            MethParamsWorkspace.NewTabVisibility = false;
+            MethParamsWorkspace.InsertMethParamsVisibility = false;
 
+            if (Workspace == methParamsWorkspace)
+            {
+
+                Icon newIcon = Icon.CreateNewIcon(IconRepository.IconId);
+                if (inputScheme == 1)
+                {
+
+                    CreateIconInput1ViewModel newWorkspace = new CreateIconInput1ViewModel(newIcon, iconRepository, dialogService);
+                    /* this.Workspaces.Add(workspace);
+                    this.SetActiveWorkspace(workspace);*/
+                    Workspace = newWorkspace;
+                    OnPropertyChanged("Workspace");
+                }
+                else
+                {
+                    CreateIconInput2ViewModel newWorkspace = new CreateIconInput2ViewModel(newIcon, iconRepository, agent);
+                    /*this.Workspaces.Add(workspace);
+                    this.SetActiveWorkspace(workspace);*/
+                    Workspace = newWorkspace;
+                    OnPropertyChanged("Workspace");
+                }
+            }
+        }
+        /*
         void SetActiveWorkspace(WorkspaceViewModel workspace)
         {
             Debug.Assert(this.Workspaces.Contains(workspace));
@@ -144,7 +229,10 @@ namespace CBRN_Project.MVVM.ViewModels
             currentViewModel.RequestClose += this.OnWorkspaceRequestClose;
             Workspaces.Remove(currentViewModel);
 
-        }
+            if (iconsList.TotalIcons > 0 && workspaces.Count == 0)
+                NewTabVisibility = true;
+
+        }*/
         #endregion
 
         #region Remove Icon Command
@@ -165,9 +253,27 @@ namespace CBRN_Project.MVVM.ViewModels
         void RemoveIcon()
         {
             iconsList.RemoveIcon();
+            
+            if (iconsList.IconsList.Count == 0)
+                this.methParamsWorkspace.NewTabVisibility = false;
+
+            if (Workspace is DailyReportViewModel)
+                Workspace = MethParamsWorkspace;
+
+
         }
 
         #endregion
+
+        #endregion
+
+        #region Show Report
+
+        public void ShowReport(Dictionary<int, DailyReport> report)
+        {
+            Workspace = new DailyReportViewModel(report);
+            OnPropertyChanged("Workspace");
+        }
 
         #endregion
     }

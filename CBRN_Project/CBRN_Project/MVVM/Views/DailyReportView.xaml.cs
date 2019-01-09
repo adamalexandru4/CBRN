@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace CBRN_Project.MVVM.Views
 {
     /// <summary>
-    /// Interaction logic for CreateIconView.xaml
+    /// Interaction logic for DailyReportView.xaml
     /// </summary>
-    public partial class CreateIconView : UserControl
+    public partial class DailyReportView : UserControl
     {
-        public CreateIconView()
+        public DailyReportView()
         {
             InitializeComponent();
         }

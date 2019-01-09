@@ -8,7 +8,7 @@ namespace CBRN_Project.MVVM.Models
 {
     public class Prophylaxis
     {
-        public float ProtectionFactor { get; set; } = 1;
+        public double ProtectionFactor { get; set; } = 1;
 
         public Prophylaxis()
         {

@@ -1,4 +1,6 @@
-﻿namespace CBRN_Project.MVVM.Models
+﻿using System.Collections.Generic;
+
+namespace CBRN_Project.MVVM.Models
 {
     public class EffChallenge
     {
@@ -8,7 +10,7 @@
         public double SecondValue   { get; set; }
 
 
-        public EffChallenge (string agent, string challengeType, double value, double secvalue)
+        public EffChallenge (string agent, string challengeType, double value, double secvalue = null)
         {
             this.Agent = agent;
             this.ChallengeType = challengeType;

@@ -14,9 +14,9 @@ namespace CBRN_Project.MVVM.Models
     {
         private RadiationClass radiationClass;
         
-        public float NeutronRadiation { get; set; }
-        public float GammaRadiation { get; set; }
-        public float BetaRadiation { get; set; } = float.PositiveInfinity;
+        public double NeutronRadiation { get; set; }
+        public double GammaRadiation { get; set; }
+        public double BetaRadiation { get; set; } = double.PositiveInfinity;
 
         public string RadiationClassValue
         {

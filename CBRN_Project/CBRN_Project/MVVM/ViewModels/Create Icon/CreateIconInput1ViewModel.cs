@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace CBRN_Project.MVVM.ViewModels
 {
-    public class CreateIconViewModel : WorkspaceViewModel
+    public class CreateIconInput1ViewModel : ViewModelBase
     {
         #region Fields
 
@@ -25,18 +25,22 @@ namespace CBRN_Project.MVVM.ViewModels
         RelayCommand changeToTextBoxBreathingRate;
         RelayCommand editIpeCommand;
         RelayCommand vehicleShelterCommand;
+        RelayCommand addChallengeCommand;
 
         #endregion
 
         #region Constructor
 
-        public CreateIconViewModel(Icon newIcon, IconRepository newIconRepository, IDialogService dialogService)
+        public CreateIconInput1ViewModel(Icon newIcon, IconRepository newIconRepository, 
+                                        IDialogService dialogService)
         {
             icon = newIcon ?? throw new ArgumentNullException("icon");
             iconRepository = newIconRepository ?? throw new ArgumentNullException("iconrepository");
             this.dialogService = dialogService;
 
-            this.DisplayName = "Create Icon";
+            this.DisplayName = "New icon";
+
+            ChallengeTypes = new ObservableCollection<ChallengeTypeClass>(MethParamsDisplay.GetChTypesList());
 
             CreateBreathingRateValues();
             CreateIpeClasses();
@@ -47,7 +51,7 @@ namespace CBRN_Project.MVVM.ViewModels
 
         #region Icon Properties
 
-        public float Personnel
+        public double Personnel
         {
             get { return icon.Personnel; }
             set
@@ -61,7 +65,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BodySurfaceArea
+        public double BodySurfaceArea
         {
             get
             {
@@ -77,6 +81,61 @@ namespace CBRN_Project.MVVM.ViewModels
                 base.OnPropertyChanged("BodySurfaceArea");
             }
         }
+
+        #region Challenge
+
+        private double stepValue;
+
+        public double StepValue
+        {
+            get { return stepValue; }
+            set
+            {
+                stepValue = value;
+                OnPropertyChanged("StepValue");
+            }
+        }
+
+        private double challengeValue;
+
+        public double ChallengeValue
+        {
+            get
+            {
+                return challengeValue;
+            }
+            set
+            {
+                challengeValue = value;
+                OnPropertyChanged("ChallengeValue");
+            }
+        }
+
+        private ObservableCollection<ChallengeTypeClass> challengeTypes;
+
+        public ObservableCollection<ChallengeTypeClass> ChallengeTypes
+        {
+            get { return challengeTypes; }
+            set
+            {
+                challengeTypes = value;
+                OnPropertyChanged("ChallengeTypes");
+            }
+        }
+
+        private ChallengeTypeClass challengeSelected;
+
+        public ChallengeTypeClass ChallengeSelected
+        {
+            get { return challengeSelected; }
+            set
+            {
+                challengeSelected = value;
+                OnPropertyChanged("ChallengeSelected");
+            }
+        }
+
+        #endregion
 
         #region Breathing Rate
 
@@ -131,7 +190,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BreathingRateChemAg
+        public double BreathingRateChemAg
         {
             get
             {
@@ -148,7 +207,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BreathingRateBioAg
+        public double BreathingRateBioAg
         {
             get
             {
@@ -329,7 +388,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float NeutronRadiation
+        public double NeutronRadiation
         {
             get
             {
@@ -342,7 +401,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float GammaRadiation
+        public double GammaRadiation
         {
             get
             {
@@ -355,7 +414,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float BlastShielding
+        public double BlastShielding
         {
             get
             {
@@ -368,7 +427,7 @@ namespace CBRN_Project.MVVM.ViewModels
             }
         }
 
-        public float Prophylaxis
+        public double Prophylaxis
         {
             get
             {
@@ -425,7 +484,37 @@ namespace CBRN_Project.MVVM.ViewModels
         }
         #endregion
 
+        #endregion
 
+        #region Add Challenge
+
+        public ICommand AddChallengeCommand
+        {
+            get
+            {
+                if(addChallengeCommand == null)
+                {
+                    addChallengeCommand = new RelayCommand(t => this.AddChallenge());
+                }
+
+                return addChallengeCommand;
+            }
+        }
+
+        void AddChallenge()
+        {
+             var challenge = new Challenge {
+                Agent = MainWindowViewModel.Instance.agent,
+                ChallengeType = ChallengeSelected.ChallengeType,
+                Step = StepValue,
+                Values = new List<double>()
+             };
+            challenge.Values.Add(ChallengeValue);
+            icon.Challenges.Add(challenge);
+
+            MainWindowViewModel.methParamsInstance.ChTypes.Add(challengeSelected.ChallengeType);
+            ChallengeValue = 0;
+        }
 
         #endregion
 
@@ -450,7 +539,13 @@ namespace CBRN_Project.MVVM.ViewModels
             if (this.IsNewIcon)
                 iconRepository.AddIcon(icon);
 
-            MainWindowViewModel.Instance.CloseWorkspace();
+            MainWindowViewModel.methParamsInstance.CalcEffCh = true;
+
+            if (MainWindowViewModel.Instance.IconsList.IconsList.Count > 0)
+                MainWindowViewModel.Instance.MethParamsWorkspace.NewTabVisibility = true;
+
+            MainWindowViewModel.Instance.Workspace = MainWindowViewModel.Instance.MethParamsWorkspace;
+            MainWindowViewModel.methParamsInstance.Agent = MainWindowViewModel.Instance.agent;
 
             base.OnPropertyChanged("DisplayName");
         }
@@ -459,7 +554,14 @@ namespace CBRN_Project.MVVM.ViewModels
         {
             get
             {
-                return true;
+                if (Personnel != 0 &&
+                   !String.IsNullOrEmpty(IpeSelected) &&
+                   StepValue != 0 &&
+                   icon.Challenges.Count > 0 &&
+                   NeutronRadiation != 0 && GammaRadiation != 0)
+                    return true;
+                else
+                    return false;
             }
         }
 
@@ -469,5 +571,6 @@ namespace CBRN_Project.MVVM.ViewModels
         }
 
         #endregion
+
     }
 }

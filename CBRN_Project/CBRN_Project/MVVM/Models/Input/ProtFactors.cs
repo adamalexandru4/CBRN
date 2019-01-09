@@ -60,13 +60,13 @@ namespace CBRN_Project.MVVM.Models
             }
         }
 
-        public float Inhalation { get; set; }
-        public float PervVap    { get; set; }
-        public float PercLiq    { get; set; }
-        public float BetaRad    { get; set; }
-        public float GammaRad   { get; set; }
-        public float NeutronRad { get; set; }
-        public float NucBlast   { get; set; }
+        public double Inhalation { get; set; }
+        public double PervVap    { get; set; }
+        public double PercLiq    { get; set; }
+        public double BetaRad    { get; set; }
+        public double GammaRad   { get; set; }
+        public double NeutronRad { get; set; }
+        public double NucBlast   { get; set; }
 
         #endregion
 
@@ -83,7 +83,7 @@ namespace CBRN_Project.MVVM.Models
             this.NucBlast = 1;
         }
 
-        public ProtFactors(float inhalation, float pervVap, float percLiq, float betaRad)
+        public ProtFactors(double inhalation, double pervVap, double percLiq, double betaRad)
         {
             Inhalation = inhalation;
             PervVap = pervVap;
@@ -129,9 +129,9 @@ namespace CBRN_Project.MVVM.Models
         void SetFullValues()
         {
             Inhalation = 1667;
-            PervVap = float.PositiveInfinity;
-            PercLiq = float.PositiveInfinity;
-            BetaRad = float.PositiveInfinity;
+            PervVap = double.PositiveInfinity;
+            PercLiq = double.PositiveInfinity;
+            BetaRad = double.PositiveInfinity;
         }
 
         void SetNoneValues()
