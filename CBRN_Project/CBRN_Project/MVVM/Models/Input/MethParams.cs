@@ -18,7 +18,7 @@ namespace CBRN_Project.MVVM.Models
 
         public double   T_MTF   { get; set; } = 30;
         public double   T_death { get; set; } = 15;
-        public bool     FlagMT  { get; set; } = true;
+        public bool     FlagMT  { get; set; } = false;
         public uint     CasCrit { get; set; } = 1;
         public uint     D_trt   { get; set; } = 1;
 
@@ -37,6 +37,16 @@ namespace CBRN_Project.MVVM.Models
         public static List<string> GetChemAgents()
         {
             return System.Enum.GetNames(typeof(ChemAgents)).ToList();
+        }
+
+        public static List<string> GetNuclearAgents()
+        {
+            return System.Enum.GetNames(typeof(NuclearAgents)).ToList();
+        }
+
+        public static List<string> GetRadAgents()
+        {
+            return System.Enum.GetNames(typeof(RadAgents)).ToList();
         }
 
         public static List<string> GetChallengeTypesForChemAgents(ChemAgents chemAgent)

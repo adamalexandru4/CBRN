@@ -1,9 +1,12 @@
 ﻿using CBRN_Project.MVVM.Models;
 using CBRN_Project.MVVM.Models.Chemical;
+using CBRN_Project.MVVM.Models.Engine.Nuclear;
+using CBRN_Project.MVVM.Models.Engine.Radiological;
 using CBRN_Project.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,22 +88,73 @@ namespace CBRN_Project.MVVM.ViewModels
             InsertMethParamsVisibility = false;
             NewTabVisibility = true;
 
-            ChemModel chemModel = new ChemModel(MainWindowViewModel.dataServiceInstance,
-                                                MainWindowViewModel.methParamsInstance,
-                                                MainWindowViewModel.Instance.iconRepository.GetIcons());
+            if (MainWindowViewModel.Instance.typeOfChallenge == "Chemical")
+            {
 
-            chemModel.MakeExIcons();
-            chemModel.MakeCohorts();
-            chemModel.MakeCIPs();
+                ChemModel chemModel = new ChemModel(MainWindowViewModel.dataServiceInstance,
+                                                    MainWindowViewModel.methParamsInstance,
+                                                    MainWindowViewModel.Instance.iconRepository.GetIcons());
 
-            Dictionary<int, DailyReport> report;
-            report = chemModel.MakeReport();
-            MainWindowViewModel.Instance.ShowReport(report);
+                chemModel.MakeExIcons();
+                chemModel.MakeCohorts();
+                chemModel.MakeCIPs();
+
+                Dictionary<int, DailyReport> report;
+                report = chemModel.MakeReport();
+                MainWindowViewModel.Instance.ShowReport(report);
+            }
+            else if (MainWindowViewModel.Instance.typeOfChallenge == "Nuclear")
+            {
+                NuclearAgent.CalculateNucChallenge(MainWindowViewModel.Instance.iconRepository.GetIcons());
+
+                /*
+                 * 
+                 * Convert NuclearAgent.OutputTable(DataTable) to Dictionary
+                 * 
+                 * */
+
+                //MainWindowViewModel.Instance.ShowReport(GetDict(NuclearAgent.OutputTable));
+            }
         }
+
+        internal Dictionary<int, DailyReport> GetDict(DataTable dt)
+        {
+            return dt.AsEnumerable()
+              .ToDictionary<DataRow, int, DailyReport>(row => row.Field<int>(0),
+                                        row => row.Field<DailyReport>(1));
+        }
+
+        #region Domide
+
+        /*private static void TestRadiological()
+        {
+            Icon icon = new Icon(1);
+            List<Icon> ls = new List<Icon> { icon };
+            RadiologicalAgent.CalculateChallenge(ls, new List<string> { "131I ", "137Cs" });
+            PrintTable(RadiologicalAgent.OutputTable);
+        }
+        
+        private static void PrintTable(DataTable outputTable)
+        {
+
+            PrintTableHeader();
+
+            foreach (DataRow dataRow in outputTable.Rows)
+            {
+                for (int i = 0; i < dataRow.ItemArray.Length; i++)
+                {
+                    Console.Write($"{dataRow.ItemArray[i]}      ");
+                }
+                Console.WriteLine("");
+            }
+        }*/
+
+        #endregion
+
         #endregion
 
         #region Variables
-        
+
         public double TMTF
         {
             get { return MainWindowViewModel.methParamsInstance.T_MTF; }

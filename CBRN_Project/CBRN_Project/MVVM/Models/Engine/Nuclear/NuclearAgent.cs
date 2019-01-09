@@ -13,7 +13,7 @@ namespace CBRN_Project.MVVM.Models.Engine.Nuclear
         private static NuclearProperties NucProperties = new NuclearProperties();
 
         //Tables
-        private static DataTable OutputTable = new DataTable();
+        public static DataTable OutputTable = new DataTable();
 
         
 

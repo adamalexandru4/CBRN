@@ -84,9 +84,9 @@ namespace CBRN_Project.MVVM.Models.Chemical
                     }
 
                     EffChallenge effCh = new EffChallenge(ch.Agent, ch.ChallengeType, 0);
-                    for (int i = 1; i < ch.Values.Count; ++i)
+                    for (int i = 0; i < ch.Values.Count; ++i)
                     {
-                        effCh.Value += ch.Values[i] - ch.Values[i - 1];
+                        effCh.Value += ch.Values[i] - effCh.Value;
                     }
                     effCh.Value = effCh.Value * z / apf;
 

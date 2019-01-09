@@ -10,7 +10,7 @@ namespace CBRN_Project.MVVM.Models
         public double SecondValue   { get; set; }
 
 
-        public EffChallenge (string agent, string challengeType, double value, double secvalue = null)
+        public EffChallenge (string agent, string challengeType, double value, double secvalue = 0)
         {
             this.Agent = agent;
             this.ChallengeType = challengeType;

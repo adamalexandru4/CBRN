@@ -503,16 +503,28 @@ namespace CBRN_Project.MVVM.ViewModels
 
         void AddChallenge()
         {
-             var challenge = new Challenge {
-                Agent = MainWindowViewModel.Instance.agent,
-                ChallengeType = ChallengeSelected.ChallengeType,
-                Step = StepValue,
-                Values = new List<double>()
-             };
-            challenge.Values.Add(ChallengeValue);
-            icon.Challenges.Add(challenge);
+            var alreadyInsertedChallenge = icon.Challenges.Find(t => t.ChallengeType == ChallengeSelected.ChallengeType);
 
-            MainWindowViewModel.methParamsInstance.ChTypes.Add(challengeSelected.ChallengeType);
+            if (alreadyInsertedChallenge == null)
+            {
+                var challenge = new Challenge
+                {
+                    Agent = MainWindowViewModel.Instance.agent,
+                    ChallengeType = ChallengeSelected.ChallengeType,
+                    Step = StepValue,
+                    Values = new List<double>()
+                };
+                challenge.Values.Add(ChallengeValue);
+                icon.Challenges.Add(challenge);
+
+                if(MainWindowViewModel.methParamsInstance.ChTypes.Find(t => t == challengeSelected.ChallengeType) == null)
+                    MainWindowViewModel.methParamsInstance.ChTypes.Add(challengeSelected.ChallengeType);
+            }
+            else
+            {
+                alreadyInsertedChallenge.Values.Add(ChallengeValue);
+            }
+
             ChallengeValue = 0;
         }
 

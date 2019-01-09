@@ -181,6 +181,16 @@ namespace CBRN_Project.MVVM.ViewModels
                     AgentsTypesVisibility = true;
                     AgentsTypesForChallenge = new ObservableCollection<string>(MethParams.GetChemAgents());
                 }
+                else if(typeOfChallengeSelected == "Nuclear")
+                {
+                    AgentsTypesVisibility = true;
+                    AgentsTypesForChallenge = new ObservableCollection<string>(MethParams.GetNuclearAgents());
+                }
+                else if(typeOfChallengeSelected == "Radiological")
+                {
+                    AgentsTypesVisibility = true;
+                    AgentsTypesForChallenge = new ObservableCollection<string>(MethParams.GetRadAgents());
+                }
                 else
                 {
                     AgentsTypesForChallenge.Clear();
